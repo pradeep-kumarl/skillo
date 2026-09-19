@@ -20,8 +20,8 @@ interface AuthScreenProps {
 export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   const [authMode, setAuthMode] = useState<"SIGN_IN" | "SIGN_UP">("SIGN_IN");
 
-  // Sign In State (Email based)
-  const [signInEmail, setSignInEmail] = useState("");
+  // Sign In State (Supports both Email ID and Phone Number)
+  const [signInIdentifier, setSignInIdentifier] = useState("");
   const [signInOtp, setSignInOtp] = useState("");
   const [signInOtpSent, setSignInOtpSent] = useState(false);
 
@@ -54,11 +54,26 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
     }
   };
 
-  // Sign In Handler (Email ID only)
+  // Sign In Handler (Supports BOTH Email ID and Mobile Phone)
   const handleSignIn = async () => {
-    const trimmedEmail = signInEmail.trim().toLowerCase();
-    if (!trimmedEmail || !trimmedEmail.includes("@") || !trimmedEmail.includes(".")) {
-      Alert.alert("Invalid Email", "Please enter a valid email address to sign in.");
+    const trimmedInput = signInIdentifier.trim();
+    if (!trimmedInput) {
+      Alert.alert(
+        "Missing Detail",
+        "Please enter your registered Email Address or Mobile Phone Number."
+      );
+      return;
+    }
+
+    const isEmail = trimmedInput.includes("@");
+    const digitsOnly = trimmedInput.replace(/[^0-9]/g, "");
+    const isPhone = !isEmail && digitsOnly.length >= 10;
+
+    if (!isEmail && !isPhone) {
+      Alert.alert(
+        "Invalid Input",
+        "Please enter a valid Email (e.g. name@example.com) or 10-digit Mobile Phone Number."
+      );
       return;
     }
 
@@ -69,7 +84,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         setSignInOtpSent(true);
         Alert.alert(
           "Login OTP Sent",
-          `Verification code sent to ${trimmedEmail}.\n\nDemo OTP: 123456`
+          `Verification code sent to ${trimmedInput}.\n\nDemo OTP: 123456`
         );
       }, 500);
       return;
@@ -86,15 +101,15 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          identifier: trimmedEmail,
+          identifier: trimmedInput,
           otp: signInOtp || "123456",
         }),
       });
       const data = await res.json();
       const user = data.user || {
         name: "Pradeep Kumar",
-        email: trimmedEmail,
-        phone: "+91 98450 12345",
+        email: isEmail ? trimmedInput : "pradeep@skillo.in",
+        phone: isPhone ? trimmedInput : "+91 98450 12345",
         aadhaarNumber: "XXXXXXXX7777",
         role: "SEEKER",
         skills: ["Mechanic (Roadside Assistance)"],
@@ -102,13 +117,18 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         isVerified: true,
         isLoggedIn: true,
       };
-      onAuthSuccess({ ...user, email: trimmedEmail, isLoggedIn: true });
+      onAuthSuccess({
+        ...user,
+        email: isEmail ? trimmedInput : user.email || "pradeep@skillo.in",
+        phone: isPhone ? trimmedInput : user.phone || "+91 98450 12345",
+        isLoggedIn: true,
+      });
     } catch (e) {
       // Fallback offline demo login
       onAuthSuccess({
         name: "Pradeep Kumar",
-        email: trimmedEmail,
-        phone: "+91 98450 12345",
+        email: isEmail ? trimmedInput : "pradeep@skillo.in",
+        phone: isPhone ? trimmedInput : "+91 98450 12345",
         aadhaarNumber: "XXXXXXXX7777",
         role: "SEEKER",
         skills: ["Mechanic (Roadside Assistance)"],
@@ -296,28 +316,27 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
           </TouchableOpacity>
         </View>
 
-        {/* 1. SIGN IN FORM (Using Email ID instead of Aadhaar) */}
+        {/* 1. SIGN IN FORM (Using Email ID or Mobile Phone Number) */}
         {authMode === "SIGN_IN" && (
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Welcome Back to Skillo</Text>
             <Text style={styles.cardSubtitle}>
-              Sign in with your registered email address.
+              Sign in with your registered email address or mobile phone number.
             </Text>
 
-            <Text style={styles.label}>Email Address:</Text>
+            <Text style={styles.label}>Email Address or Mobile Phone:</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. pradeep@skillo.in"
+              placeholder="e.g. pradeep@skillo.in or +91 98450 12345"
               placeholderTextColor="#8b949e"
-              value={signInEmail}
-              onChangeText={setSignInEmail}
-              keyboardType="email-address"
+              value={signInIdentifier}
+              onChangeText={setSignInIdentifier}
               autoCapitalize="none"
             />
 
             {signInOtpSent && (
               <>
-                <Text style={styles.label}>Enter 6-Digit Email Login OTP:</Text>
+                <Text style={styles.label}>Enter 6-Digit Login OTP:</Text>
                 <TextInput
                   style={[
                     styles.input,

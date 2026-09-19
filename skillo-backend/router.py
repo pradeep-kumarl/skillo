@@ -184,12 +184,13 @@ def lambda_handler(event, context):
 
         if not matched:
             # Fallback mock for demonstration
+            is_email = "@" in identifier
             user_id = f"user-{uuid.uuid4().hex[:8]}"
             matched = {
                 "userId": user_id,
                 "name": body.get("name", "Pradeep Kumar"),
-                "email": identifier if "@" in identifier else "pradeep@skillo.in",
-                "phone": "+91 98450 12345",
+                "email": identifier if is_email else "pradeep@skillo.in",
+                "phone": identifier if not is_email else "+91 98450 12345",
                 "role": body.get("role", "SEEKER"),
                 "skills": ["Mechanic (Roadside Assistance)", "Other Skills / Custom Help"],
                 "customSkillDescription": "Automotive battery & electrical diagnostics",
