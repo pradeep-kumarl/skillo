@@ -16,11 +16,13 @@ import { SKILL_CATEGORIES } from "@/constants/api";
 import { INITIAL_USER, UserProfile } from "@/constants/user";
 import { AadhaarAuthModal } from "@/components/aadhaar-auth-modal";
 import { AuthScreen } from "@/components/auth-screen";
+import { SosModal } from "@/components/sos-modal";
 
 export default function HomeScreen() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<UserProfile>(INITIAL_USER);
   const [authModalVisible, setAuthModalVisible] = useState(false);
+  const [sosModalVisible, setSosModalVisible] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState(SKILL_CATEGORIES[0].name);
   const [customSkillWriteup, setCustomSkillWriteup] = useState("");
   const [urgency, setUrgency] = useState<"EMERGENCY" | "TASK">("EMERGENCY");
@@ -81,9 +83,13 @@ export default function HomeScreen() {
         <View style={styles.header}>
           <View style={styles.brandRow}>
             <Text style={styles.logo}>⚡ SKILLO</Text>
-            <View style={styles.awsBadge}>
-              <Text style={styles.awsText}>☁️ AWS Bharat Builds</Text>
-            </View>
+            <TouchableOpacity
+              style={styles.sosHeaderBtn}
+              onPress={() => setSosModalVisible(true)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.sosHeaderText}>🚨 SOS</Text>
+            </TouchableOpacity>
           </View>
           <Text style={styles.tagline}>
             Hyperlocal On-the-Go Emergency & Skill Dispatch
@@ -256,6 +262,11 @@ export default function HomeScreen() {
         user={currentUser}
         onSuccess={(updated) => setCurrentUser(updated)}
       />
+
+      <SosModal
+        visible={sosModalVisible}
+        onClose={() => setSosModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -286,16 +297,24 @@ const styles = StyleSheet.create({
     color: "#58a6ff",
     letterSpacing: 1.5,
   },
-  awsBadge: {
-    backgroundColor: "#ff9900",
-    paddingVertical: 4,
-    paddingHorizontal: 10,
+  sosHeaderBtn: {
+    backgroundColor: "#e63946",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#e63946",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 4,
   },
-  awsText: {
-    color: "#000",
-    fontSize: 11,
-    fontWeight: "800",
+  sosHeaderText: {
+    color: "#ffffff",
+    fontSize: 12,
+    fontWeight: "900",
+    letterSpacing: 0.5,
   },
   tagline: {
     color: "#8b949e",

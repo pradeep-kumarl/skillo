@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { API_URL, SKILL_CATEGORIES } from "@/constants/api";
 import { UserProfile } from "@/constants/user";
+import { SosModal } from "@/components/sos-modal";
 
 interface AuthScreenProps {
   onAuthSuccess: (user: UserProfile) => void;
@@ -19,6 +20,7 @@ interface AuthScreenProps {
 
 export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   const [authMode, setAuthMode] = useState<"SIGN_IN" | "SIGN_UP">("SIGN_IN");
+  const [sosModalVisible, setSosModalVisible] = useState(false);
 
   // Sign In State (Supports both Email ID and Phone Number)
   const [signInIdentifier, setSignInIdentifier] = useState("");
@@ -271,9 +273,13 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         {/* Brand Header */}
         <View style={styles.brandContainer}>
           <Text style={styles.logo}>⚡ SKILLO</Text>
-          <View style={styles.awsBadge}>
-            <Text style={styles.awsText}>☁️ AWS Bharat Builds</Text>
-          </View>
+          <TouchableOpacity
+            style={styles.sosHeaderBtn}
+            onPress={() => setSosModalVisible(true)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.sosHeaderText}>🚨 SOS</Text>
+          </TouchableOpacity>
         </View>
         <Text style={styles.tagline}>
           Hyperlocal On-the-Go Emergency & Skill Dispatch Network
@@ -556,7 +562,18 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
             ⚡ Quick Demo Sign In as Pradeep Kumar (pradeep@skillo.in)
           </Text>
         </TouchableOpacity>
+
+        {/* Simply AWS Bharat Builds - Below Quick Demo */}
+        <View style={styles.awsBharatCard}>
+          <Text style={styles.awsBharatLogo}>☁️ AWS Bharat Builds</Text>
+        </View>
       </ScrollView>
+
+      {/* Emergency SOS Modal (Police & Ambulance) */}
+      <SosModal
+        visible={sosModalVisible}
+        onClose={() => setSosModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -723,4 +740,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   quickDemoText: { color: "#58a6ff", fontWeight: "bold", fontSize: 13, textAlign: "center" },
+  sosHeaderBtn: {
+    backgroundColor: "#e63946",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#e63946",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  sosHeaderText: {
+    color: "#ffffff",
+    fontSize: 12,
+    fontWeight: "900",
+    letterSpacing: 0.5,
+  },
+  awsBharatCard: {
+    backgroundColor: "#161b22",
+    borderWidth: 1,
+    borderColor: "#ff990055",
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginTop: 12,
+    alignItems: "center",
+  },
+  awsBharatLogo: {
+    color: "#ff9900",
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
 });
