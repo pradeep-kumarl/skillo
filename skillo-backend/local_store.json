@@ -1,8 +1,8 @@
 {
   "users": {
-    "helper-1": {
-      "userId": "helper-1",
-      "name": "Dr. Aarav Mehta",
+    "helper-doc-1": {
+      "userId": "helper-doc-1",
+      "name": "Dr. Aarav Mehta (Emergency Care)",
       "phone": "+91 98450 12345",
       "role": "HELPER",
       "skills": [
@@ -13,95 +13,200 @@
       "isAvailable": true,
       "aadhaarStatus": "VERIFIED",
       "rating": 4.9,
-      "completedJobs": 24,
+      "completedJobs": 48,
       "subscription": "ACTIVE"
     },
-    "helper-2": {
-      "userId": "helper-2",
+    "helper-doc-2": {
+      "userId": "helper-doc-2",
+      "name": "Dr. Priya Nair (Trauma Specialist)",
+      "phone": "+91 98450 77889",
+      "role": "HELPER",
+      "skills": [
+        "Doctor / Medical Emergency"
+      ],
+      "lat": 12.977,
+      "lng": 77.6,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.8,
+      "completedJobs": 62,
+      "subscription": "ACTIVE"
+    },
+    "helper-doc-3": {
+      "userId": "helper-doc-3",
+      "name": "Kiran Kumar (Certified EMT Paramedic)",
+      "phone": "+91 98450 99112",
+      "role": "HELPER",
+      "skills": [
+        "Doctor / Medical Emergency"
+      ],
+      "lat": 12.968,
+      "lng": 77.589,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.7,
+      "completedJobs": 31,
+      "subscription": "ACTIVE"
+    },
+    "helper-mech-1": {
+      "userId": "helper-mech-1",
       "name": "Rajesh Kumar (Roadside Pro)",
       "phone": "+91 98450 67890",
       "role": "HELPER",
       "skills": [
         "Mechanic (Roadside Assistance)"
       ],
-      "lat": 12.98,
-      "lng": 77.605,
+      "lat": 12.975,
+      "lng": 77.598,
       "isAvailable": true,
       "aadhaarStatus": "VERIFIED",
-      "rating": 4.8,
+      "rating": 4.9,
       "completedJobs": 87,
       "subscription": "ACTIVE"
     },
-    "helper-3": {
-      "userId": "helper-3",
-      "name": "Sunil Verma",
+    "helper-mech-2": {
+      "userId": "helper-mech-2",
+      "name": "Vikram Patel (Mobile Mechanic)",
+      "phone": "+91 98450 22334",
+      "role": "HELPER",
+      "skills": [
+        "Mechanic (Roadside Assistance)"
+      ],
+      "lat": 12.98,
+      "lng": 77.604,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.8,
+      "completedJobs": 54,
+      "subscription": "ACTIVE"
+    },
+    "helper-mech-3": {
+      "userId": "helper-mech-3",
+      "name": "Suresh Reddy (Towing & Jumpstart)",
+      "phone": "+91 98450 44556",
+      "role": "HELPER",
+      "skills": [
+        "Mechanic (Roadside Assistance)"
+      ],
+      "lat": 12.984,
+      "lng": 77.608,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.7,
+      "completedJobs": 39,
+      "subscription": "ACTIVE"
+    },
+    "helper-quick-1": {
+      "userId": "helper-quick-1",
+      "name": "Sunil Verma (Quick Mover)",
       "phone": "+91 98450 33445",
       "role": "HELPER",
       "skills": [
         "Quick Manual Help (1-hour)",
         "Electrician"
       ],
-      "lat": 12.965,
-      "lng": 77.585,
+      "lat": 12.969,
+      "lng": 77.591,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.9,
+      "completedJobs": 52,
+      "subscription": "ACTIVE"
+    },
+    "helper-quick-2": {
+      "userId": "helper-quick-2",
+      "name": "Manjunath K (Manual Support)",
+      "phone": "+91 98450 55667",
+      "role": "HELPER",
+      "skills": [
+        "Quick Manual Help (1-hour)"
+      ],
+      "lat": 12.978,
+      "lng": 77.602,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.8,
+      "completedJobs": 41,
+      "subscription": "ACTIVE"
+    },
+    "helper-quick-3": {
+      "userId": "helper-quick-3",
+      "name": "Ramesh Babu (Short-Shift Helper)",
+      "phone": "+91 98450 66778",
+      "role": "HELPER",
+      "skills": [
+        "Quick Manual Help (1-hour)"
+      ],
+      "lat": 12.964,
+      "lng": 77.584,
       "isAvailable": true,
       "aadhaarStatus": "VERIFIED",
       "rating": 4.7,
-      "completedJobs": 42,
+      "completedJobs": 29,
       "subscription": "ACTIVE"
     },
-    "helper-4": {
-      "userId": "helper-4",
-      "name": "Deepak Sharma",
+    "helper-elec-1": {
+      "userId": "helper-elec-1",
+      "name": "Anand Gowda (Licensed Wireman)",
+      "phone": "+91 98450 88123",
+      "role": "HELPER",
+      "skills": [
+        "Electrician"
+      ],
+      "lat": 12.974,
+      "lng": 77.597,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.9,
+      "completedJobs": 67,
+      "subscription": "ACTIVE"
+    },
+    "helper-elec-2": {
+      "userId": "helper-elec-2",
+      "name": "Karthik Rao (Inverter & Surge Pro)",
+      "phone": "+91 98450 99234",
+      "role": "HELPER",
+      "skills": [
+        "Electrician"
+      ],
+      "lat": 12.979,
+      "lng": 77.603,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.8,
+      "completedJobs": 45,
+      "subscription": "ACTIVE"
+    },
+    "helper-plumb-1": {
+      "userId": "helper-plumb-1",
+      "name": "Deepak Sharma (Emergency Plumbing)",
       "phone": "+91 98450 88990",
       "role": "HELPER",
       "skills": [
         "Plumber"
       ],
-      "lat": 12.955,
-      "lng": 77.575,
+      "lat": 12.972,
+      "lng": 77.593,
       "isAvailable": true,
       "aadhaarStatus": "VERIFIED",
       "rating": 4.9,
       "completedJobs": 56,
       "subscription": "ACTIVE"
     },
-    "user-59eb08e9": {
-      "userId": "user-59eb08e9",
-      "name": "Pradeep Kumar",
-      "email": "pradeep@skillo.in",
-      "phone": "+91 98450 12345",
-      "role": "SEEKER",
+    "helper-plumb-2": {
+      "userId": "helper-plumb-2",
+      "name": "Ganesh Hegde (Pipe Burst Specialist)",
+      "phone": "+91 98450 11223",
+      "role": "HELPER",
       "skills": [
-        "Mechanic (Roadside Assistance)",
-        "Other Skills / Custom Help"
+        "Plumber"
       ],
-      "customSkillDescription": "Automotive battery & electrical diagnostics",
-      "lat": 12.9716,
-      "lng": 77.5946,
+      "lat": 12.978,
+      "lng": 77.601,
       "isAvailable": true,
       "aadhaarStatus": "VERIFIED",
-      "aadhaarNumber": "XXXXXXXX7777",
-      "rating": 5.0,
-      "completedJobs": 0,
-      "subscription": "ACTIVE"
-    },
-    "user-3f814438": {
-      "userId": "user-3f814438",
-      "name": "Ravi Shankar",
-      "email": "ravi@skillo.in",
-      "phone": "+91 99887 76655",
-      "role": "SEEKER",
-      "skills": [
-        "Other Skills / Custom Help"
-      ],
-      "customSkillDescription": "Carpentry and furniture repair",
-      "lat": 12.9716,
-      "lng": 77.5946,
-      "isAvailable": false,
-      "aadhaarStatus": "VERIFIED",
-      "aadhaarNumber": "XXXXXXXX1234",
-      "rating": 5.0,
-      "completedJobs": 0,
+      "rating": 4.8,
+      "completedJobs": 38,
       "subscription": "ACTIVE"
     }
   },

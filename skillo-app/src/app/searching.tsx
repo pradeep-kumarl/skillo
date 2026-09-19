@@ -201,21 +201,29 @@ export default function SearchingScreen() {
   const router = useRouter();
   const { lat, lng, skillNeeded, urgency } = useLocalSearchParams();
 
+  const initialResponders = getFallbackHelpers(
+    String(skillNeeded || "Mechanic"),
+    Number(lat || 12.9716),
+    Number(lng || 77.5946)
+  );
+
   const [currentRadius, setCurrentRadius] = useState<number>(2);
-  const [helpers, setHelpers] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [searchPhase, setSearchPhase] = useState<string>("Scanning ring 1 (2 km)...");
+  const [helpers, setHelpers] = useState<any[]>(initialResponders);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchPhase, setSearchPhase] = useState<string>(
+    `Found ${initialResponders.length} available verified responder(s) nearby!`
+  );
   const [requestId, setRequestId] = useState<string | null>(null);
 
   const triggerDemoResponders = () => {
     const list = getFallbackHelpers(
-      String(skillNeeded || ""),
+      String(skillNeeded || "Mechanic"),
       Number(lat || 12.9716),
       Number(lng || 77.5946)
     );
     setHelpers(list);
     setCurrentRadius(2);
-    setSearchPhase(`Found ${list.length} available verified helper(s) nearby!`);
+    setSearchPhase(`Found ${list.length} available verified responder(s) nearby!`);
     setLoading(false);
   };
 
@@ -226,22 +234,27 @@ export default function SearchingScreen() {
 
     const performSearch = async (radius: number) => {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+
         const res = await fetch(`${API_URL}/api/requests/search-nearby`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
           body: JSON.stringify({
             lat: Number(lat || 12.9716),
             lng: Number(lng || 77.5946),
-            skillNeeded: String(skillNeeded || ""),
+            skillNeeded: String(skillNeeded || "Mechanic"),
             maxRadiusKm: radius,
           }),
         });
+        clearTimeout(timeoutId);
         const data = await res.json();
 
         let list = data.helpersFound || [];
         if (list.length < 2) {
           const fallbacks = getFallbackHelpers(
-            String(skillNeeded || ""),
+            String(skillNeeded || "Mechanic"),
             Number(lat || 12.9716),
             Number(lng || 77.5946)
           );
@@ -258,21 +271,21 @@ export default function SearchingScreen() {
         if (list.length > 0) {
           setHelpers(list);
           setCurrentRadius(data.radiusUsedKm || radius);
-          setSearchPhase(`Found ${list.length} available verified helper(s) nearby!`);
+          setSearchPhase(`Found ${list.length} available verified responder(s) nearby!`);
           setLoading(false);
           return true;
         }
         return false;
       } catch (err) {
-        console.log("Search error, loading fallback responders:", err);
+        console.log("Search error, maintaining fast responders:", err);
         const list = getFallbackHelpers(
-          String(skillNeeded || ""),
+          String(skillNeeded || "Mechanic"),
           Number(lat || 12.9716),
           Number(lng || 77.5946)
         );
         setHelpers(list);
         setCurrentRadius(radius);
-        setSearchPhase(`Found ${list.length} available verified helper(s) nearby!`);
+        setSearchPhase(`Found ${list.length} available verified responder(s) nearby!`);
         setLoading(false);
         return true;
       }

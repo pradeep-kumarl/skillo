@@ -34,24 +34,32 @@ export default function HomeScreen() {
 
     try {
       if (Platform.OS !== "web") {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status === "granted") {
-          const loc = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.Balanced,
-          });
-          if (loc?.coords) {
-            coords = {
-              latitude: loc.coords.latitude,
-              longitude: loc.coords.longitude,
-            };
+        const locPromise = (async () => {
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status === "granted") {
+            const loc = await Location.getLastKnownPositionAsync();
+            if (loc?.coords) return loc.coords;
+            const current = await Location.getCurrentPositionAsync({
+              accuracy: Location.Accuracy.Low,
+            });
+            if (current?.coords) return current.coords;
           }
+          return null;
+        })();
+
+        // Race with a fast 1s timeout so it NEVER blocks or hangs navigation!
+        const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 1000));
+        const detected: any = await Promise.race([locPromise, timeoutPromise]);
+        if (detected) {
+          coords = { latitude: detected.latitude, longitude: detected.longitude };
         }
       }
     } catch (e) {
       console.log("Using fallback coordinates for demo:", e);
+    } finally {
+      setLoading(false);
     }
 
-    setLoading(false);
     const finalSkill =
       selectedSkill.toLowerCase().includes("other") && customSkillWriteup.trim()
         ? `Custom: ${customSkillWriteup.trim()}`
