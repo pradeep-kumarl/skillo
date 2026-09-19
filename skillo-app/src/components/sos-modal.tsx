@@ -32,7 +32,7 @@ export function SosModal({ visible, onClose }: SosModalProps) {
             <View style={styles.titleRow}>
               <Text style={styles.icon}>🚨</Text>
               <View style={{ flex: 1 }}>
-                <Text style={styles.title}>AWS Bharat Builds • SOS</Text>
+                <Text style={styles.title}>SOS</Text>
                 <Text style={styles.subtitle}>National Emergency Dispatch Hotline</Text>
               </View>
             </View>
