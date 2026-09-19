@@ -19,9 +19,9 @@ def _load_local_store():
     # Coordinates centered around Bangalore tech / city corridor (12.9716, 77.5946)
     default_store = {
         "users": {
-            "helper-1": {
-                "userId": "helper-1",
-                "name": "Dr. Aarav Mehta",
+            "helper-doc-1": {
+                "userId": "helper-doc-1",
+                "name": "Dr. Aarav Mehta (Emergency Care)",
                 "phone": "+91 98450 12345",
                 "role": "HELPER",
                 "skills": ["Doctor / Medical Emergency"],
@@ -30,49 +30,175 @@ def _load_local_store():
                 "isAvailable": True,
                 "aadhaarStatus": "VERIFIED",
                 "rating": 4.9,
-                "completedJobs": 24,
+                "completedJobs": 48,
                 "subscription": "ACTIVE"
             },
-            "helper-2": {
-                "userId": "helper-2",
+            "helper-doc-2": {
+                "userId": "helper-doc-2",
+                "name": "Dr. Priya Nair (Trauma Specialist)",
+                "phone": "+91 98450 77889",
+                "role": "HELPER",
+                "skills": ["Doctor / Medical Emergency"],
+                "lat": 12.9770,
+                "lng": 77.6000,
+                "isAvailable": True,
+                "aadhaarStatus": "VERIFIED",
+                "rating": 4.8,
+                "completedJobs": 62,
+                "subscription": "ACTIVE"
+            },
+            "helper-doc-3": {
+                "userId": "helper-doc-3",
+                "name": "Kiran Kumar (Certified EMT Paramedic)",
+                "phone": "+91 98450 99112",
+                "role": "HELPER",
+                "skills": ["Doctor / Medical Emergency"],
+                "lat": 12.9680,
+                "lng": 77.5890,
+                "isAvailable": True,
+                "aadhaarStatus": "VERIFIED",
+                "rating": 4.7,
+                "completedJobs": 31,
+                "subscription": "ACTIVE"
+            },
+            "helper-mech-1": {
+                "userId": "helper-mech-1",
                 "name": "Rajesh Kumar (Roadside Pro)",
                 "phone": "+91 98450 67890",
                 "role": "HELPER",
                 "skills": ["Mechanic (Roadside Assistance)"],
-                "lat": 12.9800,
-                "lng": 77.6050,
+                "lat": 12.9750,
+                "lng": 77.5980,
                 "isAvailable": True,
                 "aadhaarStatus": "VERIFIED",
-                "rating": 4.8,
+                "rating": 4.9,
                 "completedJobs": 87,
                 "subscription": "ACTIVE"
             },
-            "helper-3": {
-                "userId": "helper-3",
-                "name": "Sunil Verma",
-                "phone": "+91 98450 33445",
+            "helper-mech-2": {
+                "userId": "helper-mech-2",
+                "name": "Vikram Patel (Mobile Mechanic)",
+                "phone": "+91 98450 22334",
                 "role": "HELPER",
-                "skills": ["Quick Manual Help (1-hour)", "Electrician"],
-                "lat": 12.9650,
-                "lng": 77.5850,
+                "skills": ["Mechanic (Roadside Assistance)"],
+                "lat": 12.9800,
+                "lng": 77.6040,
+                "isAvailable": True,
+                "aadhaarStatus": "VERIFIED",
+                "rating": 4.8,
+                "completedJobs": 54,
+                "subscription": "ACTIVE"
+            },
+            "helper-mech-3": {
+                "userId": "helper-mech-3",
+                "name": "Suresh Reddy (Towing & Jumpstart)",
+                "phone": "+91 98450 44556",
+                "role": "HELPER",
+                "skills": ["Mechanic (Roadside Assistance)"],
+                "lat": 12.9840,
+                "lng": 77.6080,
                 "isAvailable": True,
                 "aadhaarStatus": "VERIFIED",
                 "rating": 4.7,
-                "completedJobs": 42,
+                "completedJobs": 39,
                 "subscription": "ACTIVE"
             },
-            "helper-4": {
-                "userId": "helper-4",
-                "name": "Deepak Sharma",
+            "helper-quick-1": {
+                "userId": "helper-quick-1",
+                "name": "Sunil Verma (Quick Mover)",
+                "phone": "+91 98450 33445",
+                "role": "HELPER",
+                "skills": ["Quick Manual Help (1-hour)", "Electrician"],
+                "lat": 12.9690,
+                "lng": 77.5910,
+                "isAvailable": True,
+                "aadhaarStatus": "VERIFIED",
+                "rating": 4.9,
+                "completedJobs": 52,
+                "subscription": "ACTIVE"
+            },
+            "helper-quick-2": {
+                "userId": "helper-quick-2",
+                "name": "Manjunath K (Manual Support)",
+                "phone": "+91 98450 55667",
+                "role": "HELPER",
+                "skills": ["Quick Manual Help (1-hour)"],
+                "lat": 12.9780,
+                "lng": 77.6020,
+                "isAvailable": True,
+                "aadhaarStatus": "VERIFIED",
+                "rating": 4.8,
+                "completedJobs": 41,
+                "subscription": "ACTIVE"
+            },
+            "helper-quick-3": {
+                "userId": "helper-quick-3",
+                "name": "Ramesh Babu (Short-Shift Helper)",
+                "phone": "+91 98450 66778",
+                "role": "HELPER",
+                "skills": ["Quick Manual Help (1-hour)"],
+                "lat": 12.9640,
+                "lng": 77.5840,
+                "isAvailable": True,
+                "aadhaarStatus": "VERIFIED",
+                "rating": 4.7,
+                "completedJobs": 29,
+                "subscription": "ACTIVE"
+            },
+            "helper-elec-1": {
+                "userId": "helper-elec-1",
+                "name": "Anand Gowda (Licensed Wireman)",
+                "phone": "+91 98450 88123",
+                "role": "HELPER",
+                "skills": ["Electrician"],
+                "lat": 12.9740,
+                "lng": 77.5970,
+                "isAvailable": True,
+                "aadhaarStatus": "VERIFIED",
+                "rating": 4.9,
+                "completedJobs": 67,
+                "subscription": "ACTIVE"
+            },
+            "helper-elec-2": {
+                "userId": "helper-elec-2",
+                "name": "Karthik Rao (Inverter & Surge Pro)",
+                "phone": "+91 98450 99234",
+                "role": "HELPER",
+                "skills": ["Electrician"],
+                "lat": 12.9790,
+                "lng": 77.6030,
+                "isAvailable": True,
+                "aadhaarStatus": "VERIFIED",
+                "rating": 4.8,
+                "completedJobs": 45,
+                "subscription": "ACTIVE"
+            },
+            "helper-plumb-1": {
+                "userId": "helper-plumb-1",
+                "name": "Deepak Sharma (Emergency Plumbing)",
                 "phone": "+91 98450 88990",
                 "role": "HELPER",
                 "skills": ["Plumber"],
-                "lat": 12.9550,
-                "lng": 77.5750,
+                "lat": 12.9720,
+                "lng": 77.5930,
                 "isAvailable": True,
                 "aadhaarStatus": "VERIFIED",
                 "rating": 4.9,
                 "completedJobs": 56,
+                "subscription": "ACTIVE"
+            },
+            "helper-plumb-2": {
+                "userId": "helper-plumb-2",
+                "name": "Ganesh Hegde (Pipe Burst Specialist)",
+                "phone": "+91 98450 11223",
+                "role": "HELPER",
+                "skills": ["Plumber"],
+                "lat": 12.9780,
+                "lng": 77.6010,
+                "isAvailable": True,
+                "aadhaarStatus": "VERIFIED",
+                "rating": 4.8,
+                "completedJobs": 38,
                 "subscription": "ACTIVE"
             }
         },
@@ -277,13 +403,20 @@ def lambda_handler(event, context):
             u for u in store["users"].values()
             if u.get("role") == "HELPER"
             and u.get("isAvailable", True)
-            and (not skill_needed or any(skill_needed.lower() in s.lower() for s in u.get("skills", [])))
+            and (not skill_needed or any(skill_needed.lower() in s.lower() or s.lower() in skill_needed.lower() for s in u.get("skills", [])))
         ]
+
+        if not available_helpers:
+            # Fallback to all available helpers if custom or partial match
+            available_helpers = [
+                u for u in store["users"].values()
+                if u.get("role") == "HELPER" and u.get("isAvailable", True)
+            ]
 
         # Progressive radius check: 2km -> 4km -> 6km
         radii = [2.0, 4.0, 6.0]
         results = []
-        used_radius = None
+        used_radius = 2.0
 
         for r in radii:
             if r > max_limit_km:
@@ -296,12 +429,26 @@ def lambda_handler(event, context):
                         **h,
                         "distanceKm": round(dist, 2)
                     })
-            if matched:
+            if len(matched) >= 2:
+                results = sorted(matched, key=lambda x: x["distanceKm"])[:3]
+                used_radius = r
+                break
+            elif matched:
                 results = sorted(matched, key=lambda x: x["distanceKm"])
                 used_radius = r
-                break # Return closest expanding tier
 
-        # If none found in 2/4/6km, return empty with 6km
+        # Ensure 2 to 3 available helpers are returned if possible
+        if len(results) < 2 and available_helpers:
+            matched = []
+            for h in available_helpers:
+                dist = haversine(lat, lng, h["lat"], h["lng"])
+                matched.append({
+                    **h,
+                    "distanceKm": round(dist, 2)
+                })
+            results = sorted(matched, key=lambda x: x["distanceKm"])[:3]
+            used_radius = max_limit_km
+
         return response(200, {
             "radiusUsedKm": used_radius,
             "helpersFound": results,
