@@ -11,10 +11,8 @@ import {
   Alert,
 } from "react-native";
 import { API_URL } from "@/constants/api";
-import { useRouter } from "expo-router";
 
 export default function HelperAndVerificationScreen() {
-  const router = useRouter();
   // Helper Profile State
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const [selectedRoleSkill, setSelectedRoleSkill] = useState<string>("Doctor / Medical Emergency");
@@ -111,19 +109,6 @@ export default function HelperAndVerificationScreen() {
           <Text style={styles.headerSubtitle}>
             Roaming responder status, Aadhaar KYC, and subscription
           </Text>
-        </View>
-
-        {/* Top Mode Switcher */}
-        <View style={styles.topModeBar}>
-          <TouchableOpacity
-            style={styles.modeBtn}
-            onPress={() => router.push("/")}
-          >
-            <Text style={styles.modeBtnText}>🚨 Seek Help</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.modeBtn, styles.modeBtnActive]}>
-            <Text style={styles.modeBtnTextActive}>🛠️ Helper Mode & KYC</Text>
-          </TouchableOpacity>
         </View>
 
         {/* Roaming Helper Profile Card */}
@@ -275,40 +260,9 @@ export default function HelperAndVerificationScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#0d1117" },
   container: { padding: 20, paddingBottom: 60 },
-  header: { marginBottom: 15 },
+  header: { marginBottom: 20 },
   headerTitle: { color: "#f0f6fc", fontSize: 20, fontWeight: "900" },
   headerSubtitle: { color: "#8b949e", fontSize: 13, marginTop: 4 },
-  topModeBar: {
-    flexDirection: "row",
-    backgroundColor: "#161b22",
-    borderRadius: 10,
-    padding: 4,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#30363d",
-    gap: 6,
-  },
-  modeBtn: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: "center",
-    borderRadius: 8,
-  },
-  modeBtnActive: {
-    backgroundColor: "#21262d",
-    borderWidth: 1,
-    borderColor: "#58a6ff",
-  },
-  modeBtnText: {
-    color: "#8b949e",
-    fontSize: 13,
-    fontWeight: "600",
-  },
-  modeBtnTextActive: {
-    color: "#58a6ff",
-    fontSize: 13,
-    fontWeight: "bold",
-  },
   card: {
     backgroundColor: "#161b22",
     borderRadius: 14,

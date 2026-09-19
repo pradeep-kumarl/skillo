@@ -70,19 +70,6 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {/* Top Mode Switcher */}
-        <View style={styles.topModeBar}>
-          <TouchableOpacity style={[styles.modeBtn, styles.modeBtnActive]}>
-            <Text style={styles.modeBtnTextActive}>🚨 Seek Help</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modeBtn}
-            onPress={() => router.push("/explore")}
-          >
-            <Text style={styles.modeBtnText}>🛠️ Helper Mode & KYC</Text>
-          </TouchableOpacity>
-        </View>
-
         {/* Urgency Mode Selector */}
         <View style={styles.urgencyContainer}>
           <TouchableOpacity
@@ -232,37 +219,6 @@ const styles = StyleSheet.create({
     color: "#8b949e",
     fontSize: 13,
     marginTop: 6,
-  },
-  topModeBar: {
-    flexDirection: "row",
-    backgroundColor: "#161b22",
-    borderRadius: 10,
-    padding: 4,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#30363d",
-    gap: 6,
-  },
-  modeBtn: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: "center",
-    borderRadius: 8,
-  },
-  modeBtnActive: {
-    backgroundColor: "#21262d",
-    borderWidth: 1,
-    borderColor: "#58a6ff",
-  },
-  modeBtnText: {
-    color: "#8b949e",
-    fontSize: 13,
-    fontWeight: "600",
-  },
-  modeBtnTextActive: {
-    color: "#58a6ff",
-    fontSize: 13,
-    fontWeight: "bold",
   },
   urgencyContainer: {
     flexDirection: "row",
