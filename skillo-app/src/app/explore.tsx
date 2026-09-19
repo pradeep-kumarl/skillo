@@ -36,6 +36,13 @@ export default function HelperAndVerificationScreen() {
 
     setAcceptedId(req.requestId);
 
+    // Keep this request marked accepted in pendingRequests so it NEVER disappears
+    setPendingRequests((prev) =>
+      prev.map((r) =>
+        r.requestId === req.requestId ? { ...r, isAccepted: true } : r
+      )
+    );
+
     try {
       await fetch(`${API_URL}/api/requests/accept`, {
         method: "POST",
@@ -62,13 +69,25 @@ export default function HelperAndVerificationScreen() {
   };
 
   const handleDeclineRequest = (requestId: string) => {
-    setPendingRequests(pendingRequests.filter((r) => r.requestId !== requestId));
+    setPendingRequests((prev) => prev.filter((r) => r.requestId !== requestId));
+    if (acceptedId === requestId) {
+      setAcceptedId(null);
+    }
     Alert.alert("Declined", "Request passed to other nearby responders in the 2-6km radius.");
   };
 
-  const simulateIncomingAlert = () => {
+  const handleCompleteRequest = (requestId: string) => {
+    setPendingRequests((prev) => prev.filter((r) => r.requestId !== requestId));
+    if (acceptedId === requestId) {
+      setAcceptedId(null);
+    }
+    setCompletedJobs((prev) => prev + 1);
+    Alert.alert("Assistance Completed", "Job marked completed! Score and history updated in AWS DynamoDB.");
+  };
+
+  const simulateIncomingAlert = async () => {
     const demoReq = {
-      requestId: `req-${Date.now()}`,
+      requestId: "demo-req-akshatha",
       seekerName: "Akshatha M",
       seekerPhone: "+91 97421 23450",
       skillNeeded: selectedRoleSkill,
@@ -79,8 +98,37 @@ export default function HelperAndVerificationScreen() {
       seekerKycVerified: true,
       seekerRating: 4.9,
       seekerCompletedJobs: 18,
+      isDemo: true,
+      isAccepted: false,
     };
-    setPendingRequests([demoReq, ...pendingRequests]);
+
+    // Reset accepted state if re-triggering demo
+    setAcceptedId(null);
+    setPendingRequests((prev) => {
+      const other = prev.filter((r) => r.requestId !== demoReq.requestId);
+      return [demoReq, ...other];
+    });
+
+    try {
+      await fetch(`${API_URL}/api/requests/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          seekerId: "demo-seeker-akshatha",
+          seekerName: "Akshatha M",
+          seekerPhone: "+91 97421 23450",
+          seekerKycVerified: true,
+          seekerRating: 4.9,
+          seekerCompletedJobs: 18,
+          skillNeeded: selectedRoleSkill,
+          urgency: "EMERGENCY",
+          lat: 12.9716,
+          lng: 77.5946,
+        }),
+      });
+    } catch (e) {
+      // Local state is already set
+    }
   };
 
   const fetchPendingRequests = async () => {
@@ -88,7 +136,19 @@ export default function HelperAndVerificationScreen() {
     try {
       const res = await fetch(`${API_URL}/api/requests/pending`);
       const data = await res.json();
-      setPendingRequests(data.requests || []);
+      const backendRequests = data.requests || [];
+
+      setPendingRequests((prev) => {
+        // Build combined map preserving existing active or accepted local requests
+        const map = new Map<string, any>();
+        prev.forEach((r) => map.set(r.requestId, r));
+        backendRequests.forEach((r: any) => {
+          if (!map.has(r.requestId)) {
+            map.set(r.requestId, r);
+          }
+        });
+        return Array.from(map.values());
+      });
     } catch (e) {
       console.log("Fetch pending error:", e);
     } finally {
@@ -229,7 +289,7 @@ export default function HelperAndVerificationScreen() {
             </View>
           ) : (
             pendingRequests.map((req) => {
-              const isAccepted = acceptedId === req.requestId;
+              const isAccepted = acceptedId === req.requestId || req.isAccepted === true;
               const seekerRatingVal = req.seekerRating ? Number(req.seekerRating).toFixed(1) : "4.9";
               const isKyc = req.seekerKycVerified !== false;
 
@@ -311,6 +371,12 @@ export default function HelperAndVerificationScreen() {
                           onPress={() => Linking.openURL(`https://wa.me/${String(req.seekerPhone || "9742123450").replace(/[^0-9]/g, "")}`)}
                         >
                           <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 12 }}>💬 WhatsApp</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={{ backgroundColor: "#21262d", borderWidth: 1, borderColor: "#30363d", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 6, alignItems: "center", justifyContent: "center" }}
+                          onPress={() => handleCompleteRequest(req.requestId)}
+                        >
+                          <Text style={{ color: "#58a6ff", fontWeight: "bold", fontSize: 12 }}>Done ✓</Text>
                         </TouchableOpacity>
                       </View>
                     </View>
