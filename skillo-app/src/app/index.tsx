@@ -17,6 +17,8 @@ import { INITIAL_USER, UserProfile } from "@/constants/user";
 import { AadhaarAuthModal } from "@/components/aadhaar-auth-modal";
 import { AuthScreen } from "@/components/auth-screen";
 import { SosModal } from "@/components/sos-modal";
+import SearchingScreen from "./searching";
+import MatchedScreen from "./matched";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -27,6 +29,19 @@ export default function HomeScreen() {
   const [customSkillWriteup, setCustomSkillWriteup] = useState("");
   const [urgency, setUrgency] = useState<"EMERGENCY" | "TASK">("EMERGENCY");
   const [loading, setLoading] = useState(false);
+  const [activeStep, setActiveStep] = useState<"SELECT" | "SEARCHING" | "MATCHED">("SELECT");
+  const [searchParamsData, setSearchParamsData] = useState<{
+    lat: number;
+    lng: number;
+    skillNeeded: string;
+    urgency: string;
+  }>({
+    lat: 12.9716,
+    lng: 77.5946,
+    skillNeeded: "Mechanic",
+    urgency: "EMERGENCY",
+  });
+  const [matchedParamsData, setMatchedParamsData] = useState<any>(null);
 
   const startSearch = async () => {
     setLoading(true);
@@ -35,20 +50,22 @@ export default function HomeScreen() {
     try {
       if (Platform.OS !== "web") {
         const locPromise = (async () => {
-          const { status } = await Location.requestForegroundPermissionsAsync();
-          if (status === "granted") {
-            const loc = await Location.getLastKnownPositionAsync();
-            if (loc?.coords) return loc.coords;
-            const current = await Location.getCurrentPositionAsync({
-              accuracy: Location.Accuracy.Low,
-            });
-            if (current?.coords) return current.coords;
-          }
+          try {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            if (status === "granted") {
+              const loc = await Location.getLastKnownPositionAsync();
+              if (loc?.coords) return loc.coords;
+              const current = await Location.getCurrentPositionAsync({
+                accuracy: Location.Accuracy.Low,
+              });
+              if (current?.coords) return current.coords;
+            }
+          } catch {}
           return null;
         })();
 
-        // Race with a fast 1s timeout so it NEVER blocks or hangs navigation!
-        const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 1000));
+        // Fast 500ms timeout so it NEVER blocks or hangs navigation!
+        const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 500));
         const detected: any = await Promise.race([locPromise, timeoutPromise]);
         if (detected) {
           coords = { latitude: detected.latitude, longitude: detected.longitude };
@@ -65,21 +82,60 @@ export default function HomeScreen() {
         ? `Custom: ${customSkillWriteup.trim()}`
         : selectedSkill;
 
-    router.push({
-      pathname: "/searching",
-      params: {
-        lat: coords.latitude,
-        lng: coords.longitude,
-        skillNeeded: finalSkill,
-        urgency: urgency,
-      },
-    });
+    const data = {
+      lat: coords.latitude,
+      lng: coords.longitude,
+      skillNeeded: finalSkill,
+      urgency: urgency,
+    };
+
+    setSearchParamsData(data);
+    setActiveStep("SEARCHING");
+
+    // Also attempt router.push if running with a stack navigator
+    try {
+      router.push({
+        pathname: "/searching",
+        params: data,
+      });
+    } catch {}
   };
 
   if (!currentUser.isLoggedIn) {
     return (
       <AuthScreen
         onAuthSuccess={(user) => setCurrentUser({ ...user, isLoggedIn: true })}
+      />
+    );
+  }
+
+  if (activeStep === "SEARCHING") {
+    return (
+      <SearchingScreen
+        lat={searchParamsData.lat}
+        lng={searchParamsData.lng}
+        skillNeeded={searchParamsData.skillNeeded}
+        urgency={searchParamsData.urgency}
+        onBack={() => setActiveStep("SELECT")}
+        onMatched={(matchData) => {
+          setMatchedParamsData(matchData);
+          setActiveStep("MATCHED");
+        }}
+      />
+    );
+  }
+
+  if (activeStep === "MATCHED" && matchedParamsData) {
+    return (
+      <MatchedScreen
+        requestId={matchedParamsData.requestId}
+        helperName={matchedParamsData.helperName}
+        helperPhone={matchedParamsData.helperPhone}
+        helperSkill={matchedParamsData.helperSkill}
+        helperRating={matchedParamsData.helperRating}
+        distanceKm={matchedParamsData.distanceKm}
+        aadhaarStatus={matchedParamsData.aadhaarStatus}
+        onClose={() => setActiveStep("SELECT")}
       />
     );
   }

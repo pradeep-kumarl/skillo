@@ -13,17 +13,28 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { API_URL } from "@/constants/api";
 import { LiveMap } from "@/components/live-map";
 
-export default function MatchedScreen() {
+export interface MatchedViewProps {
+  requestId?: string;
+  helperName?: string;
+  helperPhone?: string;
+  helperSkill?: string;
+  helperRating?: string;
+  distanceKm?: string;
+  aadhaarStatus?: string;
+  onClose?: () => void;
+}
+
+export default function MatchedScreen(props?: MatchedViewProps) {
   const router = useRouter();
-  const {
-    requestId,
-    helperName,
-    helperPhone,
-    helperSkill,
-    helperRating,
-    distanceKm,
-    aadhaarStatus,
-  } = useLocalSearchParams();
+  const searchParams = useLocalSearchParams();
+
+  const requestId = props?.requestId ?? searchParams.requestId;
+  const helperName = props?.helperName ?? searchParams.helperName;
+  const helperPhone = props?.helperPhone ?? searchParams.helperPhone;
+  const helperSkill = props?.helperSkill ?? searchParams.helperSkill;
+  const helperRating = props?.helperRating ?? searchParams.helperRating;
+  const distanceKm = props?.distanceKm ?? searchParams.distanceKm;
+  const aadhaarStatus = props?.aadhaarStatus ?? searchParams.aadhaarStatus;
 
   const [selectedScore, setSelectedScore] = useState<number>(5);
   const [rated, setRated] = useState<boolean>(false);
@@ -188,7 +199,13 @@ export default function MatchedScreen() {
         {/* Finish / Return Home */}
         <TouchableOpacity
           style={styles.homeBtn}
-          onPress={() => router.replace("/")}
+          onPress={() => {
+            if (props?.onClose) {
+              props.onClose();
+            } else {
+              router.replace("/");
+            }
+          }}
         >
           <Text style={styles.homeBtnText}>Return to Home Dashboard</Text>
         </TouchableOpacity>

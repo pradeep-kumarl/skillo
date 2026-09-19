@@ -197,9 +197,31 @@ const getFallbackHelpers = (skill: string, userLat: number, userLng: number) => 
   }
 };
 
-export default function SearchingScreen() {
+export interface SearchingViewProps {
+  lat?: number;
+  lng?: number;
+  skillNeeded?: string;
+  urgency?: string;
+  onBack?: () => void;
+  onMatched?: (data: {
+    requestId: string;
+    helperName: string;
+    helperPhone: string;
+    helperSkill: string;
+    helperRating: string;
+    distanceKm: string;
+    aadhaarStatus: string;
+  }) => void;
+}
+
+export default function SearchingScreen(props?: SearchingViewProps) {
   const router = useRouter();
-  const { lat, lng, skillNeeded, urgency } = useLocalSearchParams();
+  const searchParams = useLocalSearchParams();
+
+  const lat = props?.lat ?? (searchParams.lat ? Number(searchParams.lat) : 12.9716);
+  const lng = props?.lng ?? (searchParams.lng ? Number(searchParams.lng) : 77.5946);
+  const skillNeeded = props?.skillNeeded ?? (searchParams.skillNeeded ? String(searchParams.skillNeeded) : "Mechanic");
+  const urgency = props?.urgency ?? (searchParams.urgency ? String(searchParams.urgency) : "EMERGENCY");
 
   const initialResponders = getFallbackHelpers(
     String(skillNeeded || "Mechanic"),
@@ -356,19 +378,25 @@ export default function SearchingScreen() {
         }),
       });
 
-      // Navigate to Handshake screen
-      router.replace({
-        pathname: "/matched",
-        params: {
-          requestId: newReqId,
-          helperName: helper.name,
-          helperPhone: helper.phone,
-          helperSkill: String(skillNeeded),
-          helperRating: String(helper.rating || 4.9),
-          distanceKm: String(helper.distanceKm || "0.5"),
-          aadhaarStatus: helper.aadhaarStatus || "VERIFIED",
-        },
-      });
+      // Navigate to Handshake screen or invoke onMatched callback
+      const matchData = {
+        requestId: newReqId,
+        helperName: helper.name,
+        helperPhone: helper.phone,
+        helperSkill: String(skillNeeded),
+        helperRating: String(helper.rating || 4.9),
+        distanceKm: String(helper.distanceKm || "0.5"),
+        aadhaarStatus: helper.aadhaarStatus || "VERIFIED",
+      };
+
+      if (props?.onMatched) {
+        props.onMatched(matchData);
+      } else {
+        router.replace({
+          pathname: "/matched",
+          params: matchData,
+        });
+      }
     } catch (e) {
       console.log("Connect error:", e);
     }
@@ -379,7 +407,16 @@ export default function SearchingScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         {/* Header */}
         <View style={styles.topHeader}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+          <TouchableOpacity
+            onPress={() => {
+              if (props?.onBack) {
+                props.onBack();
+              } else {
+                router.back();
+              }
+            }}
+            style={styles.backBtn}
+          >
             <Text style={styles.backBtnText}>← Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.title}>Live Radar Scan</Text>
@@ -516,7 +553,13 @@ export default function SearchingScreen() {
             </Text>
             <TouchableOpacity
               style={styles.retryBtn}
-              onPress={() => router.replace("/")}
+              onPress={() => {
+                if (props?.onBack) {
+                  props.onBack();
+                } else {
+                  router.replace("/");
+                }
+              }}
             >
               <Text style={styles.retryText}>Try Another Skill</Text>
             </TouchableOpacity>
