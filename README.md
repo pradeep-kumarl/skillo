@@ -1,6 +1,8 @@
 # ⚡ SKILLO
 ### Hyperlocal On-the-Go Emergency & Skill Dispatch Network
-> Built with **React Native (Expo)**, **AWS Serverless (SAM + Lambda + DynamoDB)**, and **Open-Source Tools**.
+> **WeMakeDevs × AWS Hackathon 2026: First Commit — Bharat Builds Tour**  
+> **Builder:** **Pradeep Kumar L** (Executive M.Tech in AI, ML & Data Science, PES University, Bangalore)  
+> **Stack:** React Native (Expo) • AWS Serverless (AWS SAM + Lambda + DynamoDB + API Gateway) • OpenStreetMap
 
 ---
 
@@ -97,4 +99,13 @@ npm run web
    - Submit a **5-Star Rating** to update the AWS database score.
 3. **Helper & Aadhaar Verification (`/explore`)**:
    - Toggle **Duty Mode (Online/Offline)**.
+   - Test demo incoming alert from **Akshatha M**, click **Accept & Assist** to trigger native phone dialer call.
    - Enter a 12-digit Aadhaar number and test OTP `123456` to receive the official `UIDAI_GOV_VERIFIED` badge.
+
+---
+
+## 🧠 7. What I Learned (Judging Criterion 03)
+As an Executive M.Tech student in AI/ML & Data Science at PES University, Bangalore, this hackathon provided valuable real-world cloud engineering experience:
+1. **Infrastructure as Code with AWS SAM**: Transitioning from ad-hoc scripts to writing production-ready serverless templates (`template.yaml`) declaring Lambda functions, DynamoDB tables, and API Gateway resources.
+2. **Stateless Geospatial Calculation**: Computing progressive Haversine radius expansions (2km $\to$ 4km $\to$ 6km) inside AWS Lambda with sub-millisecond execution times and zero idle server costs.
+3. **Privacy-Preserving Aadhaar e-KYC**: Architecting a UIDAI OTP-based verification flow that establishes mutual trust between citizens and roaming responders without storing raw 12-digit Aadhaar numbers in databases.
