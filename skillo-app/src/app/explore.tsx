@@ -76,6 +76,9 @@ export default function HelperAndVerificationScreen() {
       seekerLat: 12.9716,
       seekerLng: 77.5946,
       distanceKm: 0.8,
+      seekerKycVerified: true,
+      seekerRating: 4.9,
+      seekerCompletedJobs: 18,
     };
     setPendingRequests([demoReq, ...pendingRequests]);
   };
@@ -227,13 +230,41 @@ export default function HelperAndVerificationScreen() {
           ) : (
             pendingRequests.map((req) => {
               const isAccepted = acceptedId === req.requestId;
+              const seekerRatingVal = req.seekerRating ? Number(req.seekerRating).toFixed(1) : "4.9";
+              const isKyc = req.seekerKycVerified !== false;
+
               return (
                 <View key={req.requestId} style={[styles.incomingReqCard, isAccepted && { borderColor: "#238636", borderLeftColor: "#2ea043" }]}>
+                  {/* Skill & Urgency */}
                   <View style={styles.reqTop}>
                     <Text style={styles.reqSkill}>🚨 {req.skillNeeded}</Text>
                     <Text style={styles.reqUrgency}>{req.urgency}</Text>
                   </View>
-                  <Text style={styles.reqSeeker}>{req.seekerName} needs immediate help</Text>
+
+                  {/* Citizen Name & KYC Verified Badge */}
+                  <View style={styles.seekerHeaderRow}>
+                    <Text style={styles.reqSeekerName}>{req.seekerName} needs immediate help</Text>
+                    {isKyc && (
+                      <View style={styles.seekerKycBadge}>
+                        <Text style={styles.seekerKycBadgeText}>🛡️ KYC Verified ✓</Text>
+                      </View>
+                    )}
+                  </View>
+
+                  {/* Citizen Avg Score & Trust Stats */}
+                  <View style={styles.seekerRatingRow}>
+                    <View style={styles.seekerScorePill}>
+                      <Text style={styles.seekerScoreStar}>⭐</Text>
+                      <Text style={styles.seekerScoreVal}>{seekerRatingVal}</Text>
+                      <Text style={styles.seekerScoreLabel}>/ 5.0</Text>
+                    </View>
+                    <Text style={styles.seekerScoreTitle}>Avg Citizen Score</Text>
+                    <Text style={styles.metaDot}>•</Text>
+                    <Text style={styles.seekerCompletedText}>
+                      {req.seekerCompletedJobs || 18} past requests
+                    </Text>
+                  </View>
+
                   <Text style={styles.reqDist}>📍 Approx {req.distanceKm || 0.8} km away (within 2km ring)</Text>
 
                   {!isAccepted ? (
@@ -255,8 +286,16 @@ export default function HelperAndVerificationScreen() {
                   ) : (
                     <View style={{ marginTop: 12, backgroundColor: "#23863615", padding: 12, borderRadius: 8, borderWidth: 1, borderColor: "#238636" }}>
                       <Text style={{ color: "#3fb950", fontWeight: "bold", fontSize: 13, marginBottom: 4 }}>
-                        🎉 Request Accepted! Connected to Citizen.
+                        🎉 Request Accepted! Connected to {req.seekerName}.
                       </Text>
+                      <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                        <View style={styles.seekerKycBadge}>
+                          <Text style={styles.seekerKycBadgeText}>🛡️ KYC Verified ✓</Text>
+                        </View>
+                        <Text style={{ color: "#f0f6fc", fontSize: 12, fontWeight: "600" }}>
+                          ⭐ {seekerRatingVal} Citizen Score
+                        </Text>
+                      </View>
                       <Text style={{ color: "#f0f6fc", fontSize: 13, marginBottom: 10 }}>
                         Phone: {req.seekerPhone || "+91 97421 23450"}
                       </Text>
@@ -427,5 +466,77 @@ const styles = StyleSheet.create({
   reqSkill: { color: "#f0f6fc", fontWeight: "bold", fontSize: 14 },
   reqUrgency: { color: "#e63946", fontSize: 11, fontWeight: "bold" },
   reqSeeker: { color: "#8b949e", fontSize: 12 },
-  reqDist: { color: "#58a6ff", fontSize: 11, marginTop: 4 },
+  seekerHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 4,
+    marginBottom: 6,
+    flexWrap: "wrap",
+    gap: 6,
+  },
+  reqSeekerName: {
+    color: "#f0f6fc",
+    fontSize: 15,
+    fontWeight: "700",
+    flex: 1,
+  },
+  seekerKycBadge: {
+    backgroundColor: "#23863622",
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#2ea043",
+  },
+  seekerKycBadgeText: {
+    color: "#3fb950",
+    fontSize: 11,
+    fontWeight: "700",
+  },
+  seekerRatingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 6,
+    flexWrap: "wrap",
+    gap: 6,
+  },
+  seekerScorePill: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#21262d",
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#30363d",
+  },
+  seekerScoreStar: {
+    fontSize: 11,
+    marginRight: 3,
+  },
+  seekerScoreVal: {
+    color: "#f0f6fc",
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+  seekerScoreLabel: {
+    color: "#8b949e",
+    fontSize: 11,
+    marginLeft: 2,
+  },
+  seekerScoreTitle: {
+    color: "#58a6ff",
+    fontSize: 11,
+    fontWeight: "600",
+  },
+  metaDot: {
+    color: "#8b949e",
+    fontSize: 11,
+  },
+  seekerCompletedText: {
+    color: "#8b949e",
+    fontSize: 11,
+  },
+  reqDist: { color: "#8b949e", fontSize: 11, marginTop: 2 },
 });

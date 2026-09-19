@@ -59,7 +59,8 @@ flowchart TD
 
 ---
 
-## 🛠️ 4. Open-Source Tools Used
+## 🛠️ 4. Open-Source & AI Tools Used
+- **AI Coding Tools Used**: Google Antigravity (Agentic AI pair-programming assistant by Google DeepMind) — *used for accelerated development, boilerplate generation, and rapid UI/backend iteration*.
 - **React Native (Expo)**: Cross-platform mobile client for Android, iOS, and Web.
 - **OpenStreetMap / MapLibre**: Open-source, zero-cost map tiles and location visualization.
 - **AWS SAM CLI & LocalStack**: Open-source tooling for running and testing serverless AWS infrastructure locally.
@@ -99,8 +100,19 @@ npm run web
    - Submit a **5-Star Rating** to update the AWS database score.
 3. **Helper & Aadhaar Verification (`/explore`)**:
    - Toggle **Duty Mode (Online/Offline)**.
-   - Test demo incoming alert from **Akshatha M**, click **Accept & Assist** to trigger native phone dialer call.
+   - Test demo incoming alert from **Akshatha M** (`+91 97421 23450`), inspect the **Aadhaar e-KYC Verified badge** (`🛡️ KYC Verified ✓`) and **⭐ 4.9 Average Citizen Score**.
+   - Click **Accept & Assist** to instantly trigger native phone dialer call to the citizen.
    - Enter a 12-digit Aadhaar number and test OTP `123456` to receive the official `UIDAI_GOV_VERIFIED` badge.
 
 ---
 
+## 🧠 7. What I Learned (Judging Criterion 03)
+As an Executive M.Tech student in AI/ML & Data Science at PES University, Bangalore, this hackathon provided valuable real-world cloud engineering experience:
+1. **Infrastructure as Code with AWS SAM**: Transitioning from ad-hoc scripts to writing production-ready serverless templates (`template.yaml`) declaring Lambda functions, DynamoDB tables, and API Gateway resources.
+2. **Stateless Geospatial Calculation**: Computing progressive Haversine radius expansions (2km $\to$ 4km $\to$ 6km) inside AWS Lambda with sub-millisecond execution times and zero idle server costs.
+3. **Privacy-Preserving Aadhaar e-KYC**: Architecting a UIDAI OTP-based verification flow that establishes mutual trust between citizens and roaming responders without storing raw 12-digit Aadhaar numbers in databases.
+
+---
+
+## 📜 8. License
+This project is open-source and licensed under the [MIT License](LICENSE) — Copyright (c) 2026 Pradeep Kumar L.
