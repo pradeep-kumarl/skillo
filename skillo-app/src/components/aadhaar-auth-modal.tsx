@@ -10,13 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { API_URL } from "@/constants/api";
-
-export interface UserProfile {
-  name: string;
-  phone: string;
-  aadhaarNumber: string;
-  isVerified: boolean;
-}
+import { UserProfile } from "@/constants/user";
 
 interface AadhaarAuthModalProps {
   visible: boolean;
@@ -81,6 +75,7 @@ export function AadhaarAuthModal({
       phone,
       aadhaarNumber: cleanAadhaar,
       isVerified: true,
+      isLoggedIn: true,
     };
 
     try {

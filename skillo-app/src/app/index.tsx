@@ -14,6 +14,7 @@ import * as Location from "expo-location";
 import { SKILL_CATEGORIES } from "@/constants/api";
 import { INITIAL_USER, UserProfile } from "@/constants/user";
 import { AadhaarAuthModal } from "@/components/aadhaar-auth-modal";
+import { AuthScreen } from "@/components/auth-screen";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -58,6 +59,14 @@ export default function HomeScreen() {
     });
   };
 
+  if (!currentUser.isLoggedIn) {
+    return (
+      <AuthScreen
+        onAuthSuccess={(user) => setCurrentUser({ ...user, isLoggedIn: true })}
+      />
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -89,14 +98,22 @@ export default function HomeScreen() {
               {currentUser.name} • XXXXXXXX{currentUser.aadhaarNumber.slice(-4)}
             </Text>
           </View>
-          <TouchableOpacity
-            style={styles.aadhaarActionBtn}
-            onPress={() => setAuthModalVisible(true)}
-          >
-            <Text style={styles.aadhaarActionBtnText}>
-              {currentUser.isVerified ? "e-KYC ✓" : "Verify Login"}
-            </Text>
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
+            <TouchableOpacity
+              style={styles.aadhaarActionBtn}
+              onPress={() => setAuthModalVisible(true)}
+            >
+              <Text style={styles.aadhaarActionBtnText}>
+                {currentUser.isVerified ? "e-KYC ✓" : "Verify Login"}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.signOutBtn}
+              onPress={() => setCurrentUser({ ...currentUser, isLoggedIn: false })}
+            >
+              <Text style={styles.signOutText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Urgency Mode Selector */}
@@ -300,6 +317,19 @@ const styles = StyleSheet.create({
     color: "#3fb950",
     fontWeight: "bold",
     fontSize: 12,
+  },
+  signOutBtn: {
+    backgroundColor: "#21262d",
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#30363d",
+  },
+  signOutText: {
+    color: "#8b949e",
+    fontWeight: "600",
+    fontSize: 11,
   },
   urgencyContainer: {
     flexDirection: "row",

@@ -165,6 +165,40 @@ def lambda_handler(event, context):
         _save_local_store(store)
         return response(200, {"status": "success", "user": user})
 
+    # 2b. User Sign In / Login
+    if path == "/api/users/login" and method == "POST":
+        identifier = str(body.get("identifier", "")).strip().replace(" ", "")
+        matched = None
+        for u in store["users"].values():
+            phone_clean = str(u.get("phone", "")).replace(" ", "").replace("+91", "")
+            aadhaar_clean = str(u.get("aadhaarNumber", "")).replace(" ", "")
+            if identifier in phone_clean or identifier in aadhaar_clean:
+                matched = u
+                break
+
+        if not matched:
+            # Fallback mock for demonstration
+            user_id = f"user-{uuid.uuid4().hex[:8]}"
+            matched = {
+                "userId": user_id,
+                "name": body.get("name", "Pradeep Kumar"),
+                "phone": identifier if len(identifier) == 10 else "+91 98450 12345",
+                "role": body.get("role", "SEEKER"),
+                "skills": ["Mechanic (Roadside Assistance)", "Quick Manual Help (1-hour)"],
+                "lat": 12.9716,
+                "lng": 77.5946,
+                "isAvailable": True,
+                "aadhaarStatus": "VERIFIED",
+                "aadhaarNumber": "555566667777",
+                "rating": 5.0,
+                "completedJobs": 0,
+                "subscription": "ACTIVE"
+            }
+            store["users"][user_id] = matched
+            _save_local_store(store)
+
+        return response(200, {"status": "success", "user": matched})
+
     # 3. List Users / Helpers
     if path == "/api/users" and method == "GET":
         role_filter = event.get("queryStringParameters", {}).get("role") if event.get("queryStringParameters") else None
