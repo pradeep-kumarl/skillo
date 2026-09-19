@@ -20,7 +20,7 @@ When a roadside breakdown, medical distress, or urgent manual situation occurs:
    - ⏱️ **Quick Manual Help (1-hour)**: Emergency luggage moving, short-duration lifting/shifting.
    - ⚡ **Electrician / 🚰 Plumber**: Emergency short-circuit or pipe burst.
 2. **Progressive Geo-Scan (2km $\to$ 4km $\to$ 6km):**
-   - Automatically scans within **2 km**. If no responder accepts within 20 seconds, the radius seamlessly expands to **4 km**, then **6 km**.
+   - Automatically scans within **2 km**. If no responder accepts within 1 minute, the radius seamlessly expands to **4 km**, then **6 km**.
 3. **Instant Handshake & Zero Commission:**
    - The first available responder to accept unlocks direct phone contact, WhatsApp messaging, and live location coordinates.
    - Seekers pay responders directly (Cash / UPI QR) with **0% platform commission**.

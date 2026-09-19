@@ -58,13 +58,14 @@ export default function SearchingScreen() {
     // Phase 1: 2km Immediate Scan
     performSearch(2.0).then((found) => {
       if (!found) {
-        // Phase 2: Expand to 4km after 5 seconds
+        setSearchPhase("Scanning 2 km ring (expanding to 4 km in 1 min if unanswered)...");
+        // Phase 2: Expand to 4km after 1 minute (60,000ms)
         timer4km = setTimeout(() => {
           setCurrentRadius(4);
-          setSearchPhase("Expanding to ring 2 (4 km radius)...");
+          setSearchPhase("Expanding to ring 2 (4 km radius, waiting 1 min)...");
           performSearch(4.0).then((found4) => {
             if (!found4) {
-              // Phase 3: Expand to 6km after another 5 seconds
+              // Phase 3: Expand to 6km after another 1 minute (60,000ms)
               timer6km = setTimeout(() => {
                 setCurrentRadius(6);
                 setSearchPhase("Expanding to maximum ring 3 (6 km radius)...");
@@ -74,10 +75,10 @@ export default function SearchingScreen() {
                     setSearchPhase("No verified helpers found within 6 km.");
                   }
                 });
-              }, 5000);
+              }, 60000);
             }
           });
-        }, 5000);
+        }, 60000);
       }
     });
 

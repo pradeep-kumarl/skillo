@@ -180,7 +180,7 @@ export default function HomeScreen() {
           <Text style={styles.policyTitle}>📡 Automatic Multi-Radius Scan</Text>
           <Text style={styles.policyDesc}>
             Skillo searches active verified helpers within{" "}
-            <Text style={{ fontWeight: "700" }}>2 km</Text>. If none accept within 20s,
+            <Text style={{ fontWeight: "700" }}>2 km</Text>. If none accept within 1 minute,
             it automatically expands to{" "}
             <Text style={{ fontWeight: "700" }}>4 km</Text>, then{" "}
             <Text style={{ fontWeight: "700" }}>6 km</Text>.
