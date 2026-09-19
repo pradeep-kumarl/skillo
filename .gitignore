@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+.expo/
+dist/
+web-build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# AWS SAM
+.aws-sam/
+
+# OS
+.DS_Store
+Thumbs.db

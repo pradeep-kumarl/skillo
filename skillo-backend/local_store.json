@@ -1,0 +1,70 @@
+{
+  "users": {
+    "helper-1": {
+      "userId": "helper-1",
+      "name": "Dr. Aarav Mehta",
+      "phone": "+91 98450 12345",
+      "role": "HELPER",
+      "skills": [
+        "Doctor / Medical Emergency"
+      ],
+      "lat": 12.973,
+      "lng": 77.596,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.9,
+      "completedJobs": 24,
+      "subscription": "ACTIVE"
+    },
+    "helper-2": {
+      "userId": "helper-2",
+      "name": "Rajesh Kumar (Roadside Pro)",
+      "phone": "+91 98450 67890",
+      "role": "HELPER",
+      "skills": [
+        "Mechanic (Roadside Assistance)"
+      ],
+      "lat": 12.98,
+      "lng": 77.605,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.8,
+      "completedJobs": 87,
+      "subscription": "ACTIVE"
+    },
+    "helper-3": {
+      "userId": "helper-3",
+      "name": "Sunil Verma",
+      "phone": "+91 98450 33445",
+      "role": "HELPER",
+      "skills": [
+        "Quick Manual Help (1-hour)",
+        "Electrician"
+      ],
+      "lat": 12.965,
+      "lng": 77.585,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.7,
+      "completedJobs": 42,
+      "subscription": "ACTIVE"
+    },
+    "helper-4": {
+      "userId": "helper-4",
+      "name": "Deepak Sharma",
+      "phone": "+91 98450 88990",
+      "role": "HELPER",
+      "skills": [
+        "Plumber"
+      ],
+      "lat": 12.955,
+      "lng": 77.575,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "rating": 4.9,
+      "completedJobs": 56,
+      "subscription": "ACTIVE"
+    }
+  },
+  "requests": {}
+}
