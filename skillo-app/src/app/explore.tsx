@@ -31,7 +31,7 @@ export default function HelperAndVerificationScreen() {
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const handleAcceptRequest = async (req: any) => {
-    const rawPhone = req.seekerPhone || "+91 98111 22334";
+    const rawPhone = req.seekerPhone || "+91 97421 23450";
     const cleanPhone = String(rawPhone).replace(/[^0-9+]/g, "");
 
     setAcceptedId(req.requestId);
@@ -70,7 +70,7 @@ export default function HelperAndVerificationScreen() {
     const demoReq = {
       requestId: `req-${Date.now()}`,
       seekerName: "Akshatha M",
-      seekerPhone: "+91 98111 22334",
+      seekerPhone: "+91 97421 23450",
       skillNeeded: selectedRoleSkill,
       urgency: "EMERGENCY",
       seekerLat: 12.9716,
@@ -258,18 +258,18 @@ export default function HelperAndVerificationScreen() {
                         🎉 Request Accepted! Connected to Citizen.
                       </Text>
                       <Text style={{ color: "#f0f6fc", fontSize: 13, marginBottom: 10 }}>
-                        Phone: {req.seekerPhone || "+91 98450 12345"}
+                        Phone: {req.seekerPhone || "+91 97421 23450"}
                       </Text>
                       <View style={{ flexDirection: "row", gap: 8 }}>
                         <TouchableOpacity
                           style={{ flex: 1, backgroundColor: "#238636", paddingVertical: 8, borderRadius: 6, alignItems: "center" }}
-                          onPress={() => Linking.openURL(`tel:${req.seekerPhone || "9845012345"}`)}
+                          onPress={() => Linking.openURL(`tel:${String(req.seekerPhone || "9742123450").replace(/[^0-9+]/g, "")}`)}
                         >
                           <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 12 }}>📞 Call Citizen</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={{ flex: 1, backgroundColor: "#1f6feb", paddingVertical: 8, borderRadius: 6, alignItems: "center" }}
-                          onPress={() => Linking.openURL(`https://wa.me/${String(req.seekerPhone || "9845012345").replace(/[^0-9]/g, "")}`)}
+                          onPress={() => Linking.openURL(`https://wa.me/${String(req.seekerPhone || "9742123450").replace(/[^0-9]/g, "")}`)}
                         >
                           <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 12 }}>💬 WhatsApp</Text>
                         </TouchableOpacity>
