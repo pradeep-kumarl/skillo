@@ -52,8 +52,11 @@ class LambdaProxyHandler(BaseHTTPRequestHandler):
         print(f"[{self.command}] {self.path} - {args[1] if len(args) > 1 else ''}")
 
 if __name__ == "__main__":
-    print(f"🚀 Skillo Backend Server running at http://localhost:{PORT}")
-    print(f"⚡ Ready for React Native / Expo connection")
+    import sys
+    if sys.platform == "win32":
+        sys.stdout.reconfigure(encoding="utf-8")
+    print(f"[SERVER] Skillo Backend running at http://localhost:{PORT}")
+    print(f"[SERVER] Ready for React Native / Expo connection")
     httpd = HTTPServer(("0.0.0.0", PORT), LambdaProxyHandler)
     try:
         httpd.serve_forever()
