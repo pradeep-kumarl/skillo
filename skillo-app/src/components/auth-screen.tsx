@@ -252,7 +252,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         <View style={styles.brandContainer}>
           <Text style={styles.logo}>⚡ SKILLO</Text>
           <View style={styles.awsBadge}>
-            <Text style={styles.awsText}>☁️ AWS Serverless</Text>
+            <Text style={styles.awsText}>☁️ AWS Bharat Builds</Text>
           </View>
         </View>
         <Text style={styles.tagline}>
