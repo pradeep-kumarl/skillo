@@ -144,18 +144,24 @@ def lambda_handler(event, context):
         user_id = body.get("userId") or f"user-{uuid.uuid4().hex[:8]}"
         role = body.get("role", "SEEKER").upper()
         skills = body.get("skills", [])
+        email = str(body.get("email", "")).strip().lower()
+        custom_skill = str(body.get("customSkillDescription", "")).strip()
         aadhaar = str(body.get("aadhaarNumber", "")).strip()
+        if len(aadhaar) == 12 and not aadhaar.startswith("X"):
+            aadhaar = f"XXXXXXXX{aadhaar[-4:]}"
 
         user = {
             "userId": user_id,
             "name": body.get("name", "User"),
+            "email": email,
             "phone": body.get("phone", ""),
             "role": role,
             "skills": skills,
+            "customSkillDescription": custom_skill,
             "lat": float(body.get("lat", 12.9716)),
             "lng": float(body.get("lng", 77.5946)),
             "isAvailable": body.get("isAvailable", True if role == "HELPER" else False),
-            "aadhaarStatus": "VERIFIED" if len(aadhaar) == 12 else "PENDING",
+            "aadhaarStatus": "VERIFIED" if "XXXXXXXX" in aadhaar or len(aadhaar) == 12 else "PENDING",
             "aadhaarNumber": aadhaar,
             "rating": 5.0,
             "completedJobs": 0,
@@ -165,14 +171,14 @@ def lambda_handler(event, context):
         _save_local_store(store)
         return response(200, {"status": "success", "user": user})
 
-    # 2b. User Sign In / Login
+    # 2b. User Sign In / Login (Using Email ID)
     if path == "/api/users/login" and method == "POST":
-        identifier = str(body.get("identifier", "")).strip().replace(" ", "")
+        identifier = str(body.get("identifier", "")).strip().replace(" ", "").lower()
         matched = None
         for u in store["users"].values():
+            u_email = str(u.get("email", "")).lower()
             phone_clean = str(u.get("phone", "")).replace(" ", "").replace("+91", "")
-            aadhaar_clean = str(u.get("aadhaarNumber", "")).replace(" ", "")
-            if identifier in phone_clean or identifier in aadhaar_clean:
+            if identifier and (identifier == u_email or identifier in phone_clean):
                 matched = u
                 break
 
@@ -182,14 +188,16 @@ def lambda_handler(event, context):
             matched = {
                 "userId": user_id,
                 "name": body.get("name", "Pradeep Kumar"),
-                "phone": identifier if len(identifier) == 10 else "+91 98450 12345",
+                "email": identifier if "@" in identifier else "pradeep@skillo.in",
+                "phone": "+91 98450 12345",
                 "role": body.get("role", "SEEKER"),
-                "skills": ["Mechanic (Roadside Assistance)", "Quick Manual Help (1-hour)"],
+                "skills": ["Mechanic (Roadside Assistance)", "Other Skills / Custom Help"],
+                "customSkillDescription": "Automotive battery & electrical diagnostics",
                 "lat": 12.9716,
                 "lng": 77.5946,
                 "isAvailable": True,
                 "aadhaarStatus": "VERIFIED",
-                "aadhaarNumber": "555566667777",
+                "aadhaarNumber": "XXXXXXXX7777",
                 "rating": 5.0,
                 "completedJobs": 0,
                 "subscription": "ACTIVE"

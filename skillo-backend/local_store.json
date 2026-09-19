@@ -64,6 +64,45 @@
       "rating": 4.9,
       "completedJobs": 56,
       "subscription": "ACTIVE"
+    },
+    "user-59eb08e9": {
+      "userId": "user-59eb08e9",
+      "name": "Pradeep Kumar",
+      "email": "pradeep@skillo.in",
+      "phone": "+91 98450 12345",
+      "role": "SEEKER",
+      "skills": [
+        "Mechanic (Roadside Assistance)",
+        "Other Skills / Custom Help"
+      ],
+      "customSkillDescription": "Automotive battery & electrical diagnostics",
+      "lat": 12.9716,
+      "lng": 77.5946,
+      "isAvailable": true,
+      "aadhaarStatus": "VERIFIED",
+      "aadhaarNumber": "XXXXXXXX7777",
+      "rating": 5.0,
+      "completedJobs": 0,
+      "subscription": "ACTIVE"
+    },
+    "user-3f814438": {
+      "userId": "user-3f814438",
+      "name": "Ravi Shankar",
+      "email": "ravi@skillo.in",
+      "phone": "+91 99887 76655",
+      "role": "SEEKER",
+      "skills": [
+        "Other Skills / Custom Help"
+      ],
+      "customSkillDescription": "Carpentry and furniture repair",
+      "lat": 12.9716,
+      "lng": 77.5946,
+      "isAvailable": false,
+      "aadhaarStatus": "VERIFIED",
+      "aadhaarNumber": "XXXXXXXX1234",
+      "rating": 5.0,
+      "completedJobs": 0,
+      "subscription": "ACTIVE"
     }
   },
   "requests": {}

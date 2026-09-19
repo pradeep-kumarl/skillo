@@ -4,6 +4,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  TextInput,
   ScrollView,
   SafeAreaView,
   Platform,
@@ -21,6 +22,7 @@ export default function HomeScreen() {
   const [currentUser, setCurrentUser] = useState<UserProfile>(INITIAL_USER);
   const [authModalVisible, setAuthModalVisible] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState(SKILL_CATEGORIES[0].name);
+  const [customSkillWriteup, setCustomSkillWriteup] = useState("");
   const [urgency, setUrgency] = useState<"EMERGENCY" | "TASK">("EMERGENCY");
   const [loading, setLoading] = useState(false);
 
@@ -48,12 +50,17 @@ export default function HomeScreen() {
     }
 
     setLoading(false);
+    const finalSkill =
+      selectedSkill.toLowerCase().includes("other") && customSkillWriteup.trim()
+        ? `Custom: ${customSkillWriteup.trim()}`
+        : selectedSkill;
+
     router.push({
       pathname: "/searching",
       params: {
         lat: coords.latitude,
         lng: coords.longitude,
-        skillNeeded: selectedSkill,
+        skillNeeded: finalSkill,
         urgency: urgency,
       },
     });
@@ -191,6 +198,28 @@ export default function HomeScreen() {
             );
           })}
         </View>
+
+        {/* Custom Skill Write-Up Space when "Other" is selected */}
+        {selectedSkill.toLowerCase().includes("other") && (
+          <View style={styles.customWriteUpCard}>
+            <Text style={styles.customWriteUpTitle}>
+              ✍️ Describe Specific Task / Requirement (Write-up):
+            </Text>
+            <TextInput
+              style={styles.customWriteUpInput}
+              placeholder="e.g., Broken sofa frame repair, inverter battery connection, tailoring fix..."
+              placeholderTextColor="#8b949e"
+              value={customSkillWriteup}
+              onChangeText={setCustomSkillWriteup}
+              multiline={true}
+              numberOfLines={3}
+              textAlignVertical="top"
+            />
+            <Text style={styles.customWriteUpHint}>
+              This description will be broadcast to nearby roaming responders.
+            </Text>
+          </View>
+        )}
 
         {/* Radius Policy Banner */}
         <View style={styles.policyCard}>
@@ -453,6 +482,35 @@ const styles = StyleSheet.create({
   },
   broadcastSubtext: {
     color: "#ffccd5",
+    fontSize: 11,
+    marginTop: 4,
+  },
+  customWriteUpCard: {
+    backgroundColor: "#161b22",
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: "#a371f7",
+    padding: 14,
+    marginBottom: 20,
+  },
+  customWriteUpTitle: {
+    color: "#d2a8ff",
+    fontSize: 13,
+    fontWeight: "bold",
+    marginBottom: 6,
+  },
+  customWriteUpInput: {
+    backgroundColor: "#0d1117",
+    borderWidth: 1,
+    borderColor: "#30363d",
+    borderRadius: 8,
+    padding: 10,
+    color: "#f0f6fc",
+    fontSize: 13,
+    minHeight: 65,
+  },
+  customWriteUpHint: {
+    color: "#8b949e",
     fontSize: 11,
     marginTop: 4,
   },
