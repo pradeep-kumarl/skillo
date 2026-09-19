@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { API_URL } from "@/constants/api";
+import { LiveMap } from "@/components/live-map";
 
 export default function SearchingScreen() {
   const router = useRouter();
@@ -192,6 +193,21 @@ export default function SearchingScreen() {
             Target Skill: <Text style={{ color: "#58a6ff" }}>{skillNeeded}</Text>
           </Text>
         </View>
+
+        {/* Live Interactive OpenStreetMap */}
+        <LiveMap
+          seekerLat={Number(lat || 12.9716)}
+          seekerLng={Number(lng || 77.5946)}
+          radiusKm={currentRadius}
+          helpers={helpers.map((h) => ({
+            name: h.name,
+            lat: h.lat,
+            lng: h.lng,
+            skill: String(skillNeeded),
+            distanceKm: h.distanceKm,
+          }))}
+          height={220}
+        />
 
         {/* Found Helpers List */}
         <Text style={styles.resultsHeading}>

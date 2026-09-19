@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { API_URL } from "@/constants/api";
+import { LiveMap } from "@/components/live-map";
 
 export default function MatchedScreen() {
   const router = useRouter();
@@ -101,6 +102,21 @@ export default function MatchedScreen() {
             <Text style={styles.phoneNumber}>{helperPhone || "+91 98450 12345"}</Text>
           </View>
         </View>
+
+        {/* Live Route & Location Map */}
+        <LiveMap
+          seekerLat={12.9716}
+          seekerLng={77.5946}
+          radiusKm={2}
+          targetHelper={{
+            name: String(helperName || "Travelling Pro"),
+            lat: 12.9730,
+            lng: 77.5960,
+            skill: String(helperSkill || "Emergency Response"),
+            distanceKm: Number(distanceKm || 0.22),
+          }}
+          height={200}
+        />
 
         {/* Fast Action Buttons */}
         <View style={styles.actionsContainer}>
