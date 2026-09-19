@@ -104,8 +104,3 @@ npm run web
 
 ---
 
-## 🧠 7. What I Learned (Judging Criterion 03)
-As an Executive M.Tech student in AI/ML & Data Science at PES University, Bangalore, this hackathon provided valuable real-world cloud engineering experience:
-1. **Infrastructure as Code with AWS SAM**: Transitioning from ad-hoc scripts to writing production-ready serverless templates (`template.yaml`) declaring Lambda functions, DynamoDB tables, and API Gateway resources.
-2. **Stateless Geospatial Calculation**: Computing progressive Haversine radius expansions (2km $\to$ 4km $\to$ 6km) inside AWS Lambda with sub-millisecond execution times and zero idle server costs.
-3. **Privacy-Preserving Aadhaar e-KYC**: Architecting a UIDAI OTP-based verification flow that establishes mutual trust between citizens and roaming responders without storing raw 12-digit Aadhaar numbers in databases.
