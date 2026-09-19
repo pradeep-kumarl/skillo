@@ -11,20 +11,17 @@ import {
   Alert,
 } from "react-native";
 import { API_URL } from "@/constants/api";
+import { INITIAL_USER, UserProfile } from "@/constants/user";
+import { AadhaarAuthModal } from "@/components/aadhaar-auth-modal";
 
 export default function HelperAndVerificationScreen() {
+  const [currentUser, setCurrentUser] = useState<UserProfile>(INITIAL_USER);
+  const [authModalVisible, setAuthModalVisible] = useState(false);
   // Helper Profile State
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
-  const [selectedRoleSkill, setSelectedRoleSkill] = useState<string>("Doctor / Medical Emergency");
+  const [selectedRoleSkill, setSelectedRoleSkill] = useState<string>("Mechanic (Roadside Assistance)");
   const [helperRating, setHelperRating] = useState<number>(4.9);
   const [completedJobs, setCompletedJobs] = useState<number>(24);
-
-  // Aadhaar Verification State
-  const [aadhaarInput, setAadhaarInput] = useState<string>("");
-  const [otpInput, setOtpInput] = useState<string>("");
-  const [otpSent, setOtpSent] = useState<boolean>(false);
-  const [aadhaarVerified, setAadhaarVerified] = useState<boolean>(true);
-  const [verifying, setVerifying] = useState<boolean>(false);
 
   // Pending Requests State (Helper Radar)
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
@@ -49,57 +46,6 @@ export default function HelperAndVerificationScreen() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSendAadhaarOtp = async () => {
-    if (aadhaarInput.length !== 12) {
-      Alert.alert("Invalid Aadhaar", "Please enter a valid 12-digit Aadhaar number.");
-      return;
-    }
-    setVerifying(true);
-    try {
-      const res = await fetch(`${API_URL}/api/aadhaar/verify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ aadhaarNumber: aadhaarInput }),
-      });
-      const data = await res.json();
-      if (data.status === "OTP_SENT") {
-        setOtpSent(true);
-        Alert.alert("OTP Sent", `${data.message}\nDemo OTP: 123456`);
-      }
-    } catch (e) {
-      Alert.alert("Error", "Could not verify Aadhaar service");
-    } finally {
-      setVerifying(false);
-    }
-  };
-
-  const handleVerifyOtp = async () => {
-    setVerifying(true);
-    try {
-      const res = await fetch(`${API_URL}/api/aadhaar/verify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          aadhaarNumber: aadhaarInput,
-          otp: otpInput,
-          name: "Verified Travelling Responder",
-        }),
-      });
-      const data = await res.json();
-      if (data.verified) {
-        setAadhaarVerified(true);
-        setOtpSent(false);
-        Alert.alert("Verified!", "Aadhaar e-KYC verification successful. Skill badge awarded!");
-      } else {
-        Alert.alert("Verification Failed", data.error || "Incorrect OTP");
-      }
-    } catch (e) {
-      Alert.alert("Error", "Could not complete verification");
-    } finally {
-      setVerifying(false);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -112,11 +58,15 @@ export default function HelperAndVerificationScreen() {
         </View>
 
         {/* Roaming Helper Profile Card */}
+        {/* Roaming Helper Profile Card */}
         <View style={styles.card}>
           <View style={styles.cardRow}>
             <View>
-              <Text style={styles.helperName}>Dr. Aarav Mehta</Text>
+              <Text style={styles.helperName}>{currentUser.name}</Text>
               <Text style={styles.helperSkill}>{selectedRoleSkill}</Text>
+              <Text style={styles.aadhaarSubtext}>
+                Aadhaar: XXXXXXXX{currentUser.aadhaarNumber.slice(-4)}
+              </Text>
             </View>
             <View style={styles.statusBox}>
               <Text style={styles.statusLabel}>Duty Mode</Text>
@@ -159,8 +109,8 @@ export default function HelperAndVerificationScreen() {
         {/* Aadhaar e-KYC Verification Section */}
         <View style={styles.card}>
           <View style={styles.aadhaarHeader}>
-            <Text style={styles.aadhaarTitle}>🆔 Aadhaar e-KYC Verification</Text>
-            {aadhaarVerified && (
+            <Text style={styles.aadhaarTitle}>🆔 Responder Aadhaar e-KYC</Text>
+            {currentUser.isVerified && (
               <View style={styles.verifiedBadge}>
                 <Text style={styles.verifiedBadgeText}>🛡️ UIDAI Verified</Text>
               </View>
@@ -168,58 +118,21 @@ export default function HelperAndVerificationScreen() {
           </View>
 
           <Text style={styles.aadhaarDesc}>
-            {aadhaarVerified
-              ? "Your Aadhaar identity is verified. Your profile displays the trusted blue shield to all citizens in distress."
+            {currentUser.isVerified
+              ? `Your identity (${currentUser.name}) is UIDAI-verified. Distress calls from citizens will be dispatched to you on the road.`
               : "Verify your identity with Government UIDAI sandbox OTP to receive emergency dispatch notifications."}
           </Text>
 
-          {!aadhaarVerified && (
-            <View style={styles.aadhaarForm}>
-              {!otpSent ? (
-                <>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Enter 12-Digit Aadhaar Number"
-                    placeholderTextColor="#8b949e"
-                    keyboardType="numeric"
-                    maxLength={12}
-                    value={aadhaarInput}
-                    onChangeText={setAadhaarInput}
-                  />
-                  <TouchableOpacity
-                    style={[styles.aadhaarBtn, verifying && { opacity: 0.7 }]}
-                    onPress={handleSendAadhaarOtp}
-                    disabled={verifying}
-                  >
-                    <Text style={styles.aadhaarBtnText}>
-                      {verifying ? "Requesting OTP..." : "Send Verification OTP"}
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              ) : (
-                <>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Enter 6-Digit OTP (Demo: 123456)"
-                    placeholderTextColor="#8b949e"
-                    keyboardType="numeric"
-                    maxLength={6}
-                    value={otpInput}
-                    onChangeText={setOtpInput}
-                  />
-                  <TouchableOpacity
-                    style={[styles.aadhaarBtn, verifying && { opacity: 0.7 }]}
-                    onPress={handleVerifyOtp}
-                    disabled={verifying}
-                  >
-                    <Text style={styles.aadhaarBtnText}>
-                      {verifying ? "Verifying..." : "Confirm & Award Verified Badge"}
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </View>
-          )}
+          <TouchableOpacity
+            style={styles.aadhaarBtn}
+            onPress={() => setAuthModalVisible(true)}
+          >
+            <Text style={styles.aadhaarBtnText}>
+              {currentUser.isVerified
+                ? "🛡️ Re-Verify or Switch Account"
+                : "Verify Aadhaar e-KYC Login"}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Live Incoming Radar Requests */}
@@ -253,6 +166,13 @@ export default function HelperAndVerificationScreen() {
           )}
         </View>
       </ScrollView>
+
+      <AadhaarAuthModal
+        visible={authModalVisible}
+        onClose={() => setAuthModalVisible(false)}
+        user={currentUser}
+        onSuccess={(updated) => setCurrentUser(updated)}
+      />
     </SafeAreaView>
   );
 }
@@ -279,6 +199,7 @@ const styles = StyleSheet.create({
   },
   helperName: { color: "#f0f6fc", fontSize: 18, fontWeight: "bold" },
   helperSkill: { color: "#58a6ff", fontSize: 13, marginTop: 2 },
+  aadhaarSubtext: { color: "#3fb950", fontSize: 11, fontWeight: "600", marginTop: 2 },
   statusBox: { alignItems: "flex-end" },
   statusLabel: { color: "#8b949e", fontSize: 11, marginBottom: 2 },
   statsRow: {

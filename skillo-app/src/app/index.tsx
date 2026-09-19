@@ -12,9 +12,13 @@ import {
 import { useRouter } from "expo-router";
 import * as Location from "expo-location";
 import { SKILL_CATEGORIES } from "@/constants/api";
+import { INITIAL_USER, UserProfile } from "@/constants/user";
+import { AadhaarAuthModal } from "@/components/aadhaar-auth-modal";
 
 export default function HomeScreen() {
   const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<UserProfile>(INITIAL_USER);
+  const [authModalVisible, setAuthModalVisible] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState(SKILL_CATEGORIES[0].name);
   const [urgency, setUrgency] = useState<"EMERGENCY" | "TASK">("EMERGENCY");
   const [loading, setLoading] = useState(false);
@@ -68,6 +72,31 @@ export default function HomeScreen() {
           <Text style={styles.tagline}>
             Hyperlocal On-the-Go Emergency & Skill Dispatch
           </Text>
+        </View>
+
+        {/* Aadhaar Verified Citizen Card */}
+        <View style={styles.aadhaarBar}>
+          <View style={styles.aadhaarInfo}>
+            <View style={styles.aadhaarBadgeRow}>
+              <Text style={styles.shieldIcon}>🛡️</Text>
+              <Text style={styles.aadhaarStatusText}>
+                {currentUser.isVerified
+                  ? "Aadhaar Verified Citizen"
+                  : "Aadhaar Login Required"}
+              </Text>
+            </View>
+            <Text style={styles.citizenDetails}>
+              {currentUser.name} • XXXXXXXX{currentUser.aadhaarNumber.slice(-4)}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.aadhaarActionBtn}
+            onPress={() => setAuthModalVisible(true)}
+          >
+            <Text style={styles.aadhaarActionBtnText}>
+              {currentUser.isVerified ? "e-KYC ✓" : "Verify Login"}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Urgency Mode Selector */}
@@ -174,6 +203,13 @@ export default function HomeScreen() {
           </Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <AadhaarAuthModal
+        visible={authModalVisible}
+        onClose={() => setAuthModalVisible(false)}
+        user={currentUser}
+        onSuccess={(updated) => setCurrentUser(updated)}
+      />
     </SafeAreaView>
   );
 }
@@ -219,6 +255,51 @@ const styles = StyleSheet.create({
     color: "#8b949e",
     fontSize: 13,
     marginTop: 6,
+  },
+  aadhaarBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#161b22",
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1.5,
+    borderColor: "#238636",
+    marginBottom: 20,
+  },
+  aadhaarInfo: {
+    flex: 1,
+  },
+  aadhaarBadgeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 2,
+  },
+  shieldIcon: {
+    fontSize: 14,
+  },
+  aadhaarStatusText: {
+    color: "#3fb950",
+    fontWeight: "bold",
+    fontSize: 13,
+  },
+  citizenDetails: {
+    color: "#8b949e",
+    fontSize: 11,
+  },
+  aadhaarActionBtn: {
+    backgroundColor: "#23863622",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#2ea043",
+  },
+  aadhaarActionBtnText: {
+    color: "#3fb950",
+    fontWeight: "bold",
+    fontSize: 12,
   },
   urgencyContainer: {
     flexDirection: "row",
