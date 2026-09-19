@@ -31,6 +31,11 @@ export default function HelperAndVerificationScreen() {
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const handleAcceptRequest = async (req: any) => {
+    const rawPhone = req.seekerPhone || "+91 98111 22334";
+    const cleanPhone = String(rawPhone).replace(/[^0-9+]/g, "");
+
+    setAcceptedId(req.requestId);
+
     try {
       await fetch(`${API_URL}/api/requests/accept`, {
         method: "POST",
@@ -44,13 +49,15 @@ export default function HelperAndVerificationScreen() {
           helperLng: 77.5960,
         }),
       });
-      setAcceptedId(req.requestId);
-      Alert.alert(
-        "Request Accepted! 🤝",
-        `You have accepted ${req.seekerName}'s distress call.\nDirect phone: ${req.seekerPhone || "+91 99887 76655"}`
-      );
     } catch (e) {
-      setAcceptedId(req.requestId);
+      console.log("Accept request sync error:", e);
+    }
+
+    // Immediately trigger phone call to citizen
+    try {
+      Linking.openURL(`tel:${cleanPhone}`);
+    } catch (e) {
+      console.log("Could not open dialer:", e);
     }
   };
 
@@ -62,7 +69,7 @@ export default function HelperAndVerificationScreen() {
   const simulateIncomingAlert = () => {
     const demoReq = {
       requestId: `req-${Date.now()}`,
-      seekerName: "Ananya Sharma",
+      seekerName: "Akshatha M",
       seekerPhone: "+91 98111 22334",
       skillNeeded: selectedRoleSkill,
       urgency: "EMERGENCY",
