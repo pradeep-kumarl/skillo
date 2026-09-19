@@ -9,6 +9,7 @@ import {
   TextInput,
   Switch,
   Alert,
+  Linking,
 } from "react-native";
 import { API_URL } from "@/constants/api";
 import { INITIAL_USER, UserProfile } from "@/constants/user";
@@ -17,6 +18,8 @@ import { AadhaarAuthModal } from "@/components/aadhaar-auth-modal";
 export default function HelperAndVerificationScreen() {
   const [currentUser, setCurrentUser] = useState<UserProfile>(INITIAL_USER);
   const [authModalVisible, setAuthModalVisible] = useState(false);
+  const [acceptedId, setAcceptedId] = useState<string | null>(null);
+
   // Helper Profile State
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const [selectedRoleSkill, setSelectedRoleSkill] = useState<string>("Mechanic (Roadside Assistance)");
@@ -26,6 +29,49 @@ export default function HelperAndVerificationScreen() {
   // Pending Requests State (Helper Radar)
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  const handleAcceptRequest = async (req: any) => {
+    try {
+      await fetch(`${API_URL}/api/requests/accept`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          requestId: req.requestId,
+          helperId: "helper-user",
+          helperName: currentUser.name,
+          helperPhone: currentUser.phone,
+          helperLat: 12.9730,
+          helperLng: 77.5960,
+        }),
+      });
+      setAcceptedId(req.requestId);
+      Alert.alert(
+        "Request Accepted! 🤝",
+        `You have accepted ${req.seekerName}'s distress call.\nDirect phone: ${req.seekerPhone || "+91 99887 76655"}`
+      );
+    } catch (e) {
+      setAcceptedId(req.requestId);
+    }
+  };
+
+  const handleDeclineRequest = (requestId: string) => {
+    setPendingRequests(pendingRequests.filter((r) => r.requestId !== requestId));
+    Alert.alert("Declined", "Request passed to other nearby responders in the 2-6km radius.");
+  };
+
+  const simulateIncomingAlert = () => {
+    const demoReq = {
+      requestId: `req-${Date.now()}`,
+      seekerName: "Ananya Sharma",
+      seekerPhone: "+91 98111 22334",
+      skillNeeded: selectedRoleSkill,
+      urgency: "EMERGENCY",
+      seekerLat: 12.9716,
+      seekerLng: 77.5946,
+      distanceKm: 0.8,
+    };
+    setPendingRequests([demoReq, ...pendingRequests]);
+  };
 
   const fetchPendingRequests = async () => {
     setRefreshing(true);
@@ -51,7 +97,15 @@ export default function HelperAndVerificationScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         {/* Screen Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>🛠️ Helper & Verification Center</Text>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+            <Text style={styles.headerTitle}>🛠️ Helper & Verification</Text>
+            <TouchableOpacity
+              style={styles.signOutBtn}
+              onPress={() => setCurrentUser({ ...currentUser, isLoggedIn: false })}
+            >
+              <Text style={styles.signOutText}>Sign Out 🚪</Text>
+            </TouchableOpacity>
+          </View>
           <Text style={styles.headerSubtitle}>
             Roaming responder status, Aadhaar KYC, and subscription
           </Text>
@@ -138,10 +192,15 @@ export default function HelperAndVerificationScreen() {
         {/* Live Incoming Radar Requests */}
         <View style={styles.radarSection}>
           <View style={styles.radarHeaderRow}>
-            <Text style={styles.sectionTitle}>📡 Incoming Skill Alerts (Nearby):</Text>
-            <TouchableOpacity onPress={fetchPendingRequests}>
-              <Text style={styles.refreshText}>{refreshing ? "..." : "🔄 Refresh"}</Text>
-            </TouchableOpacity>
+            <Text style={styles.sectionTitle}>📡 Incoming Alerts (Nearby):</Text>
+            <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+              <TouchableOpacity onPress={simulateIncomingAlert}>
+                <Text style={{ color: "#e63946", fontSize: 12, fontWeight: "bold" }}>+ Test Alert</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={fetchPendingRequests}>
+                <Text style={styles.refreshText}>{refreshing ? "..." : "🔄 Refresh"}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {pendingRequests.length === 0 ? (
@@ -151,18 +210,68 @@ export default function HelperAndVerificationScreen() {
                   ? "Radar listening for distress calls within 2–6 km..."
                   : "You are currently OFFLINE. Toggle duty mode above to receive alerts."}
               </Text>
+              <TouchableOpacity
+                style={{ marginTop: 10, backgroundColor: "#e6394622", padding: 8, borderRadius: 8, borderWidth: 1, borderColor: "#e63946" }}
+                onPress={simulateIncomingAlert}
+              >
+                <Text style={{ color: "#ff7b72", fontWeight: "bold", fontSize: 12 }}>⚡ Trigger Demo Incoming Alert</Text>
+              </TouchableOpacity>
             </View>
           ) : (
-            pendingRequests.map((req) => (
-              <View key={req.requestId} style={styles.incomingReqCard}>
-                <View style={styles.reqTop}>
-                  <Text style={styles.reqSkill}>🚨 {req.skillNeeded}</Text>
-                  <Text style={styles.reqUrgency}>{req.urgency}</Text>
+            pendingRequests.map((req) => {
+              const isAccepted = acceptedId === req.requestId;
+              return (
+                <View key={req.requestId} style={[styles.incomingReqCard, isAccepted && { borderColor: "#238636", borderLeftColor: "#2ea043" }]}>
+                  <View style={styles.reqTop}>
+                    <Text style={styles.reqSkill}>🚨 {req.skillNeeded}</Text>
+                    <Text style={styles.reqUrgency}>{req.urgency}</Text>
+                  </View>
+                  <Text style={styles.reqSeeker}>{req.seekerName} needs immediate help</Text>
+                  <Text style={styles.reqDist}>📍 Approx {req.distanceKm || 0.8} km away (within 2km ring)</Text>
+
+                  {!isAccepted ? (
+                    <View style={{ flexDirection: "row", gap: 10, marginTop: 12 }}>
+                      <TouchableOpacity
+                        style={{ flex: 1, backgroundColor: "#238636", paddingVertical: 10, borderRadius: 8, alignItems: "center" }}
+                        onPress={() => handleAcceptRequest(req)}
+                      >
+                        <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 13 }}>✅ Accept & Assist</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        style={{ flex: 1, backgroundColor: "#21262d", borderWidth: 1, borderColor: "#30363d", paddingVertical: 10, borderRadius: 8, alignItems: "center" }}
+                        onPress={() => handleDeclineRequest(req.requestId)}
+                      >
+                        <Text style={{ color: "#f85149", fontWeight: "bold", fontSize: 13 }}>❌ Decline</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View style={{ marginTop: 12, backgroundColor: "#23863615", padding: 12, borderRadius: 8, borderWidth: 1, borderColor: "#238636" }}>
+                      <Text style={{ color: "#3fb950", fontWeight: "bold", fontSize: 13, marginBottom: 4 }}>
+                        🎉 Request Accepted! Connected to Citizen.
+                      </Text>
+                      <Text style={{ color: "#f0f6fc", fontSize: 13, marginBottom: 10 }}>
+                        Phone: {req.seekerPhone || "+91 98450 12345"}
+                      </Text>
+                      <View style={{ flexDirection: "row", gap: 8 }}>
+                        <TouchableOpacity
+                          style={{ flex: 1, backgroundColor: "#238636", paddingVertical: 8, borderRadius: 6, alignItems: "center" }}
+                          onPress={() => Linking.openURL(`tel:${req.seekerPhone || "9845012345"}`)}
+                        >
+                          <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 12 }}>📞 Call Citizen</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={{ flex: 1, backgroundColor: "#1f6feb", paddingVertical: 8, borderRadius: 6, alignItems: "center" }}
+                          onPress={() => Linking.openURL(`https://wa.me/${String(req.seekerPhone || "9845012345").replace(/[^0-9]/g, "")}`)}
+                        >
+                          <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 12 }}>💬 WhatsApp</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  )}
                 </View>
-                <Text style={styles.reqSeeker}>{req.seekerName} needs immediate help</Text>
-                <Text style={styles.reqDist}>Within 2km radius circle</Text>
-              </View>
-            ))
+              );
+            })
           )}
         </View>
       </ScrollView>
@@ -183,6 +292,19 @@ const styles = StyleSheet.create({
   header: { marginBottom: 20 },
   headerTitle: { color: "#f0f6fc", fontSize: 20, fontWeight: "900" },
   headerSubtitle: { color: "#8b949e", fontSize: 13, marginTop: 4 },
+  signOutBtn: {
+    backgroundColor: "#da363322",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#f85149",
+  },
+  signOutText: {
+    color: "#f85149",
+    fontWeight: "bold",
+    fontSize: 12,
+  },
   card: {
     backgroundColor: "#161b22",
     borderRadius: 14,

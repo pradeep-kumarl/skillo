@@ -75,8 +75,8 @@ export function LiveMap({
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <style>
           body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: #0d1117; }
-          #map { height: 100%; width: 100%; }
-          .leaflet-tile { filter: brightness(0.85) contrast(1.1); }
+          #map { height: 100%; width: 100%; background: #161b22; }
+          .leaflet-tile { filter: brightness(0.9) contrast(1.05); }
           .seeker-pin {
             animation: pulse 1.5s infinite;
           }
@@ -90,7 +90,7 @@ export function LiveMap({
       <body>
         <div id="map"></div>
         <script>
-          var map = L.map('map', { zoomControl: false, attributionControl: false }).setView([${seekerLat}, ${seekerLng}], 14);
+          var map = L.map('map', { zoomControl: true, attributionControl: false }).setView([${seekerLat}, ${seekerLng}], 14);
 
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19
@@ -110,7 +110,7 @@ export function LiveMap({
           var circle = L.circle([${seekerLat}, ${seekerLng}], {
             color: '#58a6ff',
             fillColor: '#58a6ff',
-            fillOpacity: 0.12,
+            fillOpacity: 0.15,
             weight: 2,
             radius: ${radiusMeters}
           }).addTo(map);
@@ -120,7 +120,18 @@ export function LiveMap({
 
           // Auto-fit bounds
           var group = new L.featureGroup([circle]);
-          map.fitBounds(group.getBounds(), { padding: [20, 20] });
+          map.fitBounds(group.getBounds(), { padding: [25, 25] });
+
+          function fixSize() {
+            if (map) {
+              map.invalidateSize();
+              map.fitBounds(group.getBounds(), { padding: [25, 25] });
+            }
+          }
+          setTimeout(fixSize, 100);
+          setTimeout(fixSize, 300);
+          setTimeout(fixSize, 800);
+          window.addEventListener('resize', fixSize);
         </script>
       </body>
     </html>
@@ -145,6 +156,8 @@ export function LiveMap({
         source={{ html: htmlContent }}
         style={styles.webView}
         scrollEnabled={false}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
       />
     </View>
   );

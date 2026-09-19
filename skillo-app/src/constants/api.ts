@@ -54,4 +54,12 @@ export const SKILL_CATEGORIES = [
     description: "Pipe burst, valve leak, water crisis fix",
     color: "#457b9d",
   },
+  {
+    id: "other",
+    name: "Other Skills / Custom Help",
+    icon: "✨",
+    tag: "Custom",
+    description: "Carpentry, appliance fix, tailoring, or any local assistance",
+    color: "#a371f7",
+  },
 ];

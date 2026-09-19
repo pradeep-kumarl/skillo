@@ -150,6 +150,31 @@ export default function SearchingScreen() {
           <View style={{ width: 60 }} />
         </View>
 
+        {/* Live Interactive OpenStreetMap - Hero Element */}
+        <View style={{ marginBottom: 14 }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 8, paddingHorizontal: 2 }}>
+            <Text style={{ color: "#58a6ff", fontSize: 13, fontWeight: "bold" }}>
+              🗺️ Hyperlocal Live Map (2–6km OpenStreetMap)
+            </Text>
+            <Text style={{ color: "#8b949e", fontSize: 11 }}>
+              Radius: {currentRadius} km
+            </Text>
+          </View>
+          <LiveMap
+            seekerLat={Number(lat || 12.9716)}
+            seekerLng={Number(lng || 77.5946)}
+            radiusKm={currentRadius}
+            helpers={helpers.map((h) => ({
+              name: h.name,
+              lat: h.lat,
+              lng: h.lng,
+              skill: String(skillNeeded),
+              distanceKm: h.distanceKm,
+            }))}
+            height={260}
+          />
+        </View>
+
         {/* Radar Visual Rings Indicator */}
         <View style={styles.radarCard}>
           <View style={styles.radiusPillRow}>
@@ -194,21 +219,6 @@ export default function SearchingScreen() {
             Target Skill: <Text style={{ color: "#58a6ff" }}>{skillNeeded}</Text>
           </Text>
         </View>
-
-        {/* Live Interactive OpenStreetMap */}
-        <LiveMap
-          seekerLat={Number(lat || 12.9716)}
-          seekerLng={Number(lng || 77.5946)}
-          radiusKm={currentRadius}
-          helpers={helpers.map((h) => ({
-            name: h.name,
-            lat: h.lat,
-            lng: h.lng,
-            skill: String(skillNeeded),
-            distanceKm: h.distanceKm,
-          }))}
-          height={220}
-        />
 
         {/* Found Helpers List */}
         <Text style={styles.resultsHeading}>

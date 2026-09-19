@@ -298,28 +298,6 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
               Both citizens and skilled responders are Aadhaar-verified for 100% safety.
             </Text>
 
-            {/* Role Selection */}
-            <Text style={styles.label}>Select Your Primary Role:</Text>
-            <View style={styles.roleRow}>
-              <TouchableOpacity
-                style={[styles.roleCard, role === "SEEKER" && styles.roleCardActive]}
-                onPress={() => setRole("SEEKER")}
-              >
-                <Text style={styles.roleIcon}>🚨</Text>
-                <Text style={styles.roleTitle}>Citizen (Seeker)</Text>
-                <Text style={styles.roleDesc}>Need emergency / task help</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.roleCard, role === "HELPER" && styles.roleCardActive]}
-                onPress={() => setRole("HELPER")}
-              >
-                <Text style={styles.roleIcon}>🛠️</Text>
-                <Text style={styles.roleTitle}>Skill Responder</Text>
-                <Text style={styles.roleDesc}>Earn on the go / Save lives</Text>
-              </TouchableOpacity>
-            </View>
-
             <Text style={styles.label}>Full Name (as per Aadhaar):</Text>
             <TextInput
               style={styles.input}
@@ -350,10 +328,9 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
               maxLength={12}
             />
 
-            {/* If Helper, Show Skill Picker */}
-            {role === "HELPER" && (
-              <View style={{ marginTop: 8 }}>
-                <Text style={styles.label}>Select Skills You Can Provide:</Text>
+            {/* Skills selection for everyone */}
+            <View style={{ marginTop: 8 }}>
+              <Text style={styles.label}>Skills You Can Provide (Optional):</Text>
                 <View style={styles.skillsSelector}>
                   {SKILL_CATEGORIES.map((cat) => {
                     const isChecked = selectedSkills.includes(cat.name);
@@ -375,7 +352,6 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   })}
                 </View>
               </View>
-            )}
 
             {signUpOtpSent && (
               <>
