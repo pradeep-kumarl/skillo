@@ -1,17 +1,7 @@
 import { Platform } from "react-native";
 
-// Automatically detects environment
-// - Web: http://localhost:3000
-// - Android Emulator: http://10.0.2.2:3000
-// - Physical device / local network: IP address
-const LOCAL_DEV_IP = "192.168.1.9"; // Replace with your computer's Wi-Fi IP for phone testing
-
-export const API_URL = Platform.select({
-  web: "http://localhost:3000",
-  android: `http://${LOCAL_DEV_IP}:3000`,
-  ios: `http://${LOCAL_DEV_IP}:3000`,
-  default: "http://localhost:3000",
-});
+// Live AWS API Gateway Serverless Endpoint
+export const API_URL = "https://e7xzlm0y48.execute-api.us-east-1.amazonaws.com/Prod";
 
 export const SKILL_CATEGORIES = [
   {
